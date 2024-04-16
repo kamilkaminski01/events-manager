@@ -1,4 +1,4 @@
-.PHONY: build run recreate isort black flake8 mypy lint clear
+.PHONY: build run recreate isort black flake8 mypy lint frontcheck clear
 
 build:
 	docker-compose build
@@ -26,6 +26,9 @@ lint:
 	docker-compose run --rm -T web black .
 	docker-compose run --rm -T web flake8 .
 	docker-compose run --rm -T web mypy .
+
+frontcheck:
+	docker-compose run --rm -T frontend npm run check
 
 clear:
 	docker-compose down -v
