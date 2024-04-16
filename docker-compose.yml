@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    depends_on:
+        db:
+          condition: service_healthy
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+    command: sh -c "flask run --debug --host=0.0.0.0 --port=4000"
+
+  db:
+    restart: always
+    image: postgres:15.3-alpine
+    env_file:
+      - ./.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+        test: sh -c "pg_isready -U postgres"
+        interval: 3s
+        timeout: 3s
+        retries: 5
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
