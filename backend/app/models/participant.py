@@ -28,10 +28,7 @@ class Meal(db.Model):  # type: ignore
     type = db.Column(db.Enum(MealType), unique=True, nullable=False)
 
     def __repr__(self) -> str:
-        return f"<Meal: {self.type}>"
-
-    def to_dict(self) -> dict:
-        return {"id": self.id, "type": self.type.value}
+        return self.type.value
 
 
 class Participant(db.Model):  # type: ignore
@@ -50,15 +47,4 @@ class Participant(db.Model):  # type: ignore
     )
 
     def __repr__(self) -> str:
-        return f"<Participant: {self.first_name} {self.first_name}>"
-
-    def to_dict(self) -> dict:
-        return {
-            "id": self.id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "is_host": self.is_host,
-            "days_participation_length": self.days_participation_length,
-            "meal_preference": self.meal_preference.value,
-            "chosen_meals": [meal.type.value for meal in self.chosen_meals],
-        }
+        return f"{self.first_name} {self.first_name}"
