@@ -37,7 +37,6 @@ def create_participant() -> Response:
                 first_name=data["first_name"],
                 last_name=data["last_name"],
                 is_host=data["is_host"],
-                days_participation_length=data["days_participation_length"],
                 meal_preference=data["meal_preference"],
                 chosen_meals=_get_chosen_meals(data["chosen_meals"]),
             )

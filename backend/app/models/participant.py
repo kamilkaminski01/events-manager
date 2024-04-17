@@ -38,7 +38,6 @@ class Participant(db.Model):  # type: ignore
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     is_host = db.Column(db.Boolean, default=False)
-    days_participation_length = db.Column(db.Integer, nullable=False)
     meal_preference = db.Column(db.Enum(MealsPreference), nullable=False)
     chosen_meals = db.relationship(
         "Meal",

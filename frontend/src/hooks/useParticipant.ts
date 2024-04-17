@@ -5,6 +5,7 @@ import { ENDPOINTS, PATHS } from 'utils/consts'
 import { parseApiErrors } from 'utils/parseApiErrors'
 import { generatePath, useNavigate } from 'react-router-dom'
 import { IParticipant } from 'models/participant'
+import { IRegister } from 'models/requests/register'
 
 const useParticipant = (id?: number) => {
   const [participantData, setParticipantData] = useState({} as IParticipant)
@@ -24,7 +25,7 @@ const useParticipant = (id?: number) => {
     }
   }, [])
 
-  const createParticipant = useCallback(async (data: IParticipant): Promise<IServerResponse> => {
+  const createParticipant = useCallback(async (data: IRegister): Promise<IServerResponse> => {
     try {
       await axiosDefault.post(ENDPOINTS.participants, { ...data })
 
