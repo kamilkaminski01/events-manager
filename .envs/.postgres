@@ -5,5 +5,3 @@ POSTGRES_PORT=5432
 POSTGRES_NAME=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-
-DATABASE_URI=postgresql://postgres:postgres@postgres:5432/postgres
