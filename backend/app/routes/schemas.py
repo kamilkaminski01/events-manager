@@ -25,6 +25,7 @@ class ParticipantRequestSchema(CamelCaseSchema):
 
 
 class ParticipantResponseSchema(CamelCaseSchema):
+    id = fields.Integer()
     first_name = fields.Str()
     last_name = fields.Str()
     is_host = fields.Bool()

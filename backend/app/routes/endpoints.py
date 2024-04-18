@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from flask import Blueprint, Response, jsonify, make_response, request
 from marshmallow.exceptions import ValidationError
+from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from app.extensions import db
 from app.models.participant import Meal, Participant
@@ -24,14 +25,20 @@ def create_meal() -> Response:
     return make_response(jsonify(ResponseMessage.CREATED), 201)
 
 
-@api.route("/participants/", methods=["GET", "POST"])
-def create_participant() -> Response:
-    response_schema = ParticipantResponseSchema()
+@api.route("/participants/", methods=["GET"])
+def get_participants() -> Response:
     if request.method == "GET":
+        response_schema = ParticipantResponseSchema()
         participants = Participant.query.all()
         response = [response_schema.dump(participant) for participant in participants]
         return make_response(jsonify(response), 200)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
+@api.route("/participants/", methods=["POST"])
+def create_participant() -> Response:
     if request.method == "POST":
+        response_schema = ParticipantResponseSchema()
         try:
             data = ParticipantRequestSchema().load(request.get_json())
             participant = Participant(
@@ -46,6 +53,19 @@ def create_participant() -> Response:
         except ValidationError:
             return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
         return make_response(jsonify(response_schema.dump(participant)), 201)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
+@api.route("/participants/<int:id>/delete/", methods=["DELETE"])
+def delete_participant(id: int) -> Response:
+    if request.method == "DELETE":
+        try:
+            participant = Participant.query.get(id)
+            db.session.delete(participant)
+            db.session.commit()
+        except UnmappedInstanceError:
+            return make_response(jsonify(ResponseMessage.NOT_FOUND), 400)
+        return make_response(jsonify(ResponseMessage.DELETED), 200)
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
 
 
