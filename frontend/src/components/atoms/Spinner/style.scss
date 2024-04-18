@@ -1,0 +1,30 @@
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+  z-index: 1;
+
+  &:after {
+    display: block;
+    width: 3.75em;
+    height: 3.75em;
+    content: ' ';
+
+    border-radius: 50%;
+    border: 5px solid $moon;
+    border-top: 5px solid $primary-color;
+
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

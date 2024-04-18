@@ -21,7 +21,7 @@ def create_meal() -> Response:
         db.session.commit()
     except KeyError:
         return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
-    return jsonify(meal.to_dict())
+    return make_response(jsonify(ResponseMessage.CREATED), 201)
 
 
 @api.route("/participants/", methods=["GET", "POST"])

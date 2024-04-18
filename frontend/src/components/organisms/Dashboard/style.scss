@@ -1,0 +1,51 @@
+.dashboard {
+  padding: 2.5em 1.5em 0 1.5em;
+  margin-bottom: 3em;
+
+  color: $carbon;
+
+  background-color: white;
+  box-shadow: 0 0 64px 1px #0f224314;
+  border-radius: 0.5em;
+
+  .dashboard__table {
+    display: grid;
+
+    padding-bottom: 1em;
+
+    font-size: 0.875em;
+
+    & > * {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    }
+
+    .table__header {
+      display: grid;
+      text-align: center;
+
+      padding: 0.5em;
+
+      border-bottom: 1px solid $devil;
+    }
+  }
+
+  .dashboard__title {
+    font-weight: 700;
+    color: $carbon;
+  }
+
+  .dashboard__subtitle {
+    margin-top: 0.5em;
+
+    color: $devil;
+  }
+}
+
+.dashboard--no-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2.5em;
+}

@@ -1,7 +1,7 @@
 import { EMealPreference } from 'models/mealPreference'
 import { EMealType } from 'models/mealType'
 
-export interface IRegister {
+export interface ICreateParticipant {
   firstName: string
   lastName: string
   mealPreference: EMealPreference

@@ -1,0 +1,24 @@
+.participant {
+  display: grid;
+  text-align: center;
+
+  padding: 0.8em 0.5em;
+
+  &:nth-child(odd) {
+    background-color: $alabaster;
+  }
+
+  & > span:not(.participant__actions) {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .participant__actions {
+    img {
+      cursor: pointer;
+      margin: 0 0.25em;
+    }
+  }
+}

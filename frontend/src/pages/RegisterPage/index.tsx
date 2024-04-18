@@ -1,7 +1,7 @@
 import './style.scss'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { raiseFieldsErrors } from 'utils/raiseFieldsErrors'
-import useParticipant from 'hooks/useParticipant'
+import useParticipants from 'hooks/useParticipants'
 import Input from 'components/molecules/Input'
 import { valid } from 'utils/Validators/validators'
 import { validSchemas } from 'utils/Validators/validatorsSchemas'
@@ -9,10 +9,13 @@ import { EMealPreference } from 'models/mealPreference'
 import Button from 'components/atoms/Button'
 import Checkbox from 'components/atoms/Checkbox'
 import { EMealType } from 'models/mealType'
+import { PATHS } from 'utils/consts'
+import { useNavigate } from 'react-router-dom'
 
 const RegisterPage = () => {
   const methods = useForm()
-  const { createParticipant } = useParticipant()
+  const navigate = useNavigate()
+  const { createParticipant } = useParticipants()
 
   const formID = 'registerForm'
 
@@ -24,15 +27,20 @@ const RegisterPage = () => {
       .filter((key) => data[key])
       .map((key) => key as EMealType)
 
-    const response = await createParticipant({
-      firstName,
-      lastName,
-      mealPreference,
-      chosenMeals
-    })
+    const response = await createParticipant(
+      {
+        firstName,
+        lastName,
+        mealPreference,
+        chosenMeals
+      },
+      { preventDataRefreshAfterRequest: true }
+    )
 
     if (!response.succeed && response.errors) {
       raiseFieldsErrors(response.errors, methods.setError)
+    } else {
+      navigate(PATHS.home)
     }
   }
 
