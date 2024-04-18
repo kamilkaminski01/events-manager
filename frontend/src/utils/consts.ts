@@ -7,3 +7,8 @@ export const PATHS = {
   home: '/',
   register: '/register'
 }
+
+export const ENDPOINTS = {
+  participants: 'participants/',
+  participantDetails: 'participants/:id/details/'
+}

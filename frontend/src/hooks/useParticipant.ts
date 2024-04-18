@@ -23,11 +23,17 @@ const useParticipant = (id?: number) => {
     } catch (error) {
       return parseApiErrors(error)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const createParticipant = useCallback(async (data: IRegister): Promise<IServerResponse> => {
+  const createParticipant = async (data: IRegister): Promise<IServerResponse> => {
     try {
-      await axiosDefault.post(ENDPOINTS.participants, { ...data })
+      await axiosDefault.post(ENDPOINTS.participants, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        mealPreference: data.mealPreference,
+        chosenMeals: data.chosenMeals
+      })
 
       navigate(PATHS.home)
 
@@ -35,7 +41,7 @@ const useParticipant = (id?: number) => {
     } catch (error) {
       return parseApiErrors(error)
     }
-  }, [])
+  }
 
   const updateParticipant = useCallback(async (data: FormData): Promise<IServerResponse> => {
     try {
@@ -45,6 +51,7 @@ const useParticipant = (id?: number) => {
     } catch (error) {
       return parseApiErrors(error)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const deleteParticipant = useCallback(async (): Promise<IServerResponse> => {
@@ -55,6 +62,7 @@ const useParticipant = (id?: number) => {
     } catch (error) {
       return parseApiErrors(error)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return {

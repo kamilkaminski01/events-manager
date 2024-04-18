@@ -1,0 +1,59 @@
+.checkbox-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+
+  .checkbox-wrapper__checkbox {
+    position: absolute;
+    opacity: 0;
+
+    &:checked ~ .checkbox-wrapper__indicator {
+      background-color: $primary-color;
+      border: none;
+    }
+
+    &:checked ~ .checkbox-wrapper__indicator::after {
+      display: block;
+    }
+  }
+
+  .checkbox-wrapper__indicator {
+    position: absolute;
+    bottom: 0;
+    width: 1em;
+    height: 1em;
+    z-index: 1;
+
+    border: 1px solid $moon;
+    border-radius: 2px;
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      display: none;
+
+      left: 6.5px;
+      top: 3px;
+      width: 4px;
+      height: 8px;
+
+      border: solid white;
+      border-width: 0 2px 2px 0;
+
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+  }
+
+  .checkbox-wrapper__content {
+    color: $carbon;
+  }
+}
