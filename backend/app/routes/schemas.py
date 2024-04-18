@@ -20,8 +20,8 @@ class ParticipantRequestSchema(CamelCaseSchema):
     first_name = fields.Str()
     last_name = fields.Str()
     is_host = fields.Bool(load_default=False)
-    meal_preference = fields.Enum(MealsPreference)
-    chosen_meals = fields.List(fields.Enum(MealType))
+    meal_preference = fields.Enum(MealsPreference, allow_none=True)
+    chosen_meals = fields.List(fields.Enum(MealType), allow_none=True)
 
 
 class ParticipantResponseSchema(CamelCaseSchema):
