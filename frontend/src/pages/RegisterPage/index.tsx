@@ -6,27 +6,28 @@ import Input from 'components/molecules/Input'
 import { valid } from 'utils/Validators/validators'
 import { validSchemas } from 'utils/Validators/validatorsSchemas'
 import Button from 'components/atoms/Button'
-import { EMealType } from 'models/mealType'
 import { PATHS } from 'utils/consts'
 import { useNavigate } from 'react-router-dom'
 import { useModals } from 'providers/modals/context'
 import MealOptions from 'components/molecules/MealOptions'
+import { useState } from 'react'
+import { IMealOptions } from 'models/mealOptions'
 
 const RegisterPage = () => {
   const methods = useForm()
   const navigate = useNavigate()
   const { openModal } = useModals()
   const { createParticipant } = useParticipants()
+  const [mealOptionsData, setMealOptionsData] = useState<IMealOptions>({
+    mealPreference: null,
+    chosenMeals: []
+  })
 
   const formID = 'registerForm'
 
   const onSubmit = async (data: FieldValues) => {
     const { firstName, lastName } = data
-    const mealPreference = data.mealPreference === '-' ? null : data.mealPreference
-    const chosenMeals = Object.keys(data)
-      .filter((key) => Object.values(EMealType).includes(key as EMealType))
-      .filter((key) => data[key])
-      .map((key) => key as EMealType)
+    const { mealPreference, chosenMeals } = mealOptionsData
 
     const response = await createParticipant(
       {
@@ -63,7 +64,14 @@ const RegisterPage = () => {
           <Button
             className="btn--outline"
             type="button"
-            onClick={() => openModal(<MealOptions name="mealPreference" formID={formID} />)}>
+            onClick={() =>
+              openModal(
+                <MealOptions
+                  mealOptionsData={mealOptionsData}
+                  setMealOptionsData={setMealOptionsData}
+                />
+              )
+            }>
             Meal options
           </Button>
           <Button className="register-form__submit-btn" type="submit" form={formID}>

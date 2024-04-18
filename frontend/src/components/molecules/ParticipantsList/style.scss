@@ -16,6 +16,10 @@
   }
 
   .participant__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     img {
       cursor: pointer;
       margin: 0 0.25em;

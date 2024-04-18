@@ -16,8 +16,8 @@ const DeleteAccountModal = ({
     const response = await deleteParticipant()
 
     if (response.succeed) {
-      getParticipants()
       closeModal()
+      getParticipants()
     }
   }
 

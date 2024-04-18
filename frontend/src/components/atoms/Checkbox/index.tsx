@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form'
 import { CheckboxProps } from './interface'
 import './style.scss'
 
-const Checkbox = ({ children, name }: CheckboxProps) => {
+const Checkbox = ({ children, name, defaultValue }: CheckboxProps) => {
   const { register } = useFormContext()
 
   return (
@@ -11,6 +11,7 @@ const Checkbox = ({ children, name }: CheckboxProps) => {
         className="checkbox-wrapper__checkbox"
         data-testid={name}
         type="checkbox"
+        defaultChecked={defaultValue}
         {...register(name)}
       />
       <span className="checkbox-wrapper__indicator" />
