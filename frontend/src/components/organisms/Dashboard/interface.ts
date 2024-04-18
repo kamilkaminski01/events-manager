@@ -4,4 +4,5 @@ export interface DashboardProps {
   participants: IParticipant[] | undefined
   isError: boolean
   isLoading: boolean
+  getParticipants: () => void
 }

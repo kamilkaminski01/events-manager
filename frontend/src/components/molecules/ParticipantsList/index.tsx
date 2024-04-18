@@ -4,15 +4,25 @@ import TrueIcon from 'assets/icons/true-icon.svg'
 import FalseIcon from 'assets/icons/false-icon.svg'
 import EditIcon from 'assets/icons/edit-icon.svg'
 import DeleteIcon from 'assets/icons/delete-icon.svg'
+import { useModals } from 'providers/modals/context'
+import ParticipantDeletion from './partials/modals/ParticipantDeletion'
 
-const ParticipantsList = ({ participants }: ParticipantsListProps) => {
+const ParticipantsList = ({ participants, getParticipants }: ParticipantsListProps) => {
+  const { openModal } = useModals()
+
   return (
     <>
       {participants?.map((participant, id) => (
         <div key={id} className="participant">
           <span>{participant.firstName}</span>
           <span>{participant.lastName}</span>
-          <span>{participant.isHost ? <img src={TrueIcon} /> : <img src={FalseIcon} />}</span>
+          <span>
+            {participant.isHost ? (
+              <img src={TrueIcon} alt="Host" />
+            ) : (
+              <img src={FalseIcon} alt="Not host" />
+            )}
+          </span>
           <span>{participant.mealPreference ? participant.mealPreference : '-'}</span>
           <span>
             <>
@@ -22,7 +32,21 @@ const ParticipantsList = ({ participants }: ParticipantsListProps) => {
             </>
           </span>
           <span className="participant__actions">
-            <img src={EditIcon} /> <img src={DeleteIcon} />
+            <img src={EditIcon} alt="Edit" />
+            <img
+              src={DeleteIcon}
+              alt="Delete"
+              onClick={() =>
+                openModal(
+                  <ParticipantDeletion
+                    id={participant.id}
+                    firstName={participant.firstName}
+                    lastName={participant.lastName}
+                    getParticipants={getParticipants}
+                  />
+                )
+              }
+            />
           </span>
         </div>
       ))}

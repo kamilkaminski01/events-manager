@@ -5,16 +5,17 @@ import useParticipants from 'hooks/useParticipants'
 import Input from 'components/molecules/Input'
 import { valid } from 'utils/Validators/validators'
 import { validSchemas } from 'utils/Validators/validatorsSchemas'
-import { EMealPreference } from 'models/mealPreference'
 import Button from 'components/atoms/Button'
-import Checkbox from 'components/atoms/Checkbox'
 import { EMealType } from 'models/mealType'
 import { PATHS } from 'utils/consts'
 import { useNavigate } from 'react-router-dom'
+import { useModals } from 'providers/modals/context'
+import MealOptions from 'components/molecules/MealOptions'
 
 const RegisterPage = () => {
   const methods = useForm()
   const navigate = useNavigate()
+  const { openModal } = useModals()
   const { createParticipant } = useParticipants()
 
   const formID = 'registerForm'
@@ -59,22 +60,12 @@ const RegisterPage = () => {
             placeholder="Last Name"
             validators={{ required: valid.required, ...validSchemas.name }}
           />
-          <div className="register-form__options">
-            <div className="register-form__options-select-items">
-              <h3 className="register-form__select-title">Meal preference</h3>
-              <select
-                id="mealPreference"
-                className="register-form__select"
-                {...methods.register('mealPreference')}>
-                <option>-</option>
-                <option value={EMealPreference.Carnivorous}>Carnivorous</option>
-                <option value={EMealPreference.Vegetarian}>Vegetarian</option>
-              </select>
-            </div>
-            <Checkbox name={EMealType.Breakfast}>Breakfast</Checkbox>
-            <Checkbox name={EMealType.Dinner}>Dinner</Checkbox>
-            <Checkbox name={EMealType.Supper}>Supper</Checkbox>
-          </div>
+          <Button
+            className="btn--outline"
+            type="button"
+            onClick={() => openModal(<MealOptions name="mealPreference" formID={formID} />)}>
+            Meal options
+          </Button>
           <Button className="register-form__submit-btn" type="submit" form={formID}>
             Register
           </Button>

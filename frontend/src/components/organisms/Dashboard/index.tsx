@@ -3,7 +3,7 @@ import { DashboardProps } from './interface'
 import './style.scss'
 import Spinner from 'components/atoms/Spinner'
 
-const Dashboard = ({ participants, isError, isLoading }: DashboardProps) => {
+const Dashboard = ({ participants, isError, isLoading, getParticipants }: DashboardProps) => {
   return (
     <>
       {isError ? (
@@ -27,7 +27,10 @@ const Dashboard = ({ participants, isError, isLoading }: DashboardProps) => {
                       <strong>Chosen meals</strong>
                       <strong>Actions</strong>
                     </div>
-                    <ParticipantsList participants={participants} />
+                    <ParticipantsList
+                      participants={participants}
+                      getParticipants={getParticipants}
+                    />
                   </div>
                 </div>
               ) : (

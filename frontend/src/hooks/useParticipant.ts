@@ -6,7 +6,7 @@ import { parseApiErrors } from 'utils/parseApiErrors'
 import { generatePath } from 'react-router-dom'
 import { IParticipant } from 'models/participant'
 
-const useParticipant = (id?: number) => {
+const useParticipant = (id: number) => {
   const [participantData, setParticipantData] = useState({} as IParticipant)
 
   const getParticipantData = useCallback(async (): Promise<IServerResponse> => {
@@ -26,7 +26,8 @@ const useParticipant = (id?: number) => {
 
   const updateParticipant = useCallback(async (data: FormData): Promise<IServerResponse> => {
     try {
-      await axiosDefault.patch(generatePath(ENDPOINTS.participantDetails, { id: `${id}` }), data)
+      const endpoint = generatePath(ENDPOINTS.participantDetails, { id: `${id}` }) + '/'
+      await axiosDefault.patch(endpoint, data)
 
       return { succeed: true }
     } catch (error) {
@@ -37,7 +38,8 @@ const useParticipant = (id?: number) => {
 
   const deleteParticipant = useCallback(async (): Promise<IServerResponse> => {
     try {
-      await axiosDefault.delete(generatePath(ENDPOINTS.participantDetails, { id: `${id}` }))
+      const endpoint = generatePath(ENDPOINTS.deleteParticipant, { id: `${id}` }) + '/'
+      await axiosDefault.delete(endpoint)
 
       return { succeed: true }
     } catch (error) {

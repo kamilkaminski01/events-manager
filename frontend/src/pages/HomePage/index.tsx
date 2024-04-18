@@ -12,7 +12,12 @@ const HomePage = () => {
 
   return (
     <main className="home-page">
-      <Dashboard participants={participants} isError={isError} isLoading={isLoading} />
+      <Dashboard
+        participants={participants}
+        isError={isError}
+        isLoading={isLoading}
+        getParticipants={getParticipants}
+      />
     </main>
   )
 }
