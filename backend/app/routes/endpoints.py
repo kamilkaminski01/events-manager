@@ -24,7 +24,7 @@ def create_meal() -> Response:
 
 
 @api.route("/participants/", methods=["GET"])
-def get_participants() -> Response:
+def list_participants() -> Response:
     if request.method == "GET":
         response_schema = ParticipantResponseSchema()
         participants = Participant.default_sort().all()
@@ -54,15 +54,23 @@ def create_participant() -> Response:
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
 
 
-@api.route("/participants/<int:id>/details/", methods=["GET", "PATCH"])
-def participant_details(id: int) -> Response:
-    participant = Participant.query.get(id)
-    if participant:
-        if request.method == "GET":
+@api.route("/participants/<int:id>/", methods=["GET"])
+def get_participant(id: int) -> Response:
+    if request.method == "GET":
+        participant = Participant.query.get(id)
+        if participant:
             response_schema = ParticipantResponseSchema()
             response = response_schema.dump(participant)
             return make_response(jsonify(response), 200)
-        if request.method == "PATCH":
+        return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
+@api.route("/participants/<int:id>/", methods=["PATCH"])
+def update_participant(id: int) -> Response:
+    if request.method == "PATCH":
+        participant = Participant.query.get(id)
+        if participant:
             try:
                 request_schema = ParticipantRequestSchema()
                 data = request_schema.load(request.get_json(), partial=True)
@@ -72,11 +80,11 @@ def participant_details(id: int) -> Response:
                 return make_response(jsonify(ResponseMessage.UPDATED), 200)
             except ValidationError:
                 return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
-        return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
-    return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
+        return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
 
 
-@api.route("/participants/<int:id>/delete/", methods=["DELETE"])
+@api.route("/participants/<int:id>/", methods=["DELETE"])
 def delete_participant(id: int) -> Response:
     if request.method == "DELETE":
         try:
