@@ -1,4 +1,7 @@
 import enum
+from datetime import datetime
+
+from sqlalchemy import desc
 
 from app.extensions import db
 
@@ -35,6 +38,7 @@ class Participant(db.Model):  # type: ignore
     __tablename__ = "participants"
 
     id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     is_host = db.Column(db.Boolean, default=False)
@@ -47,3 +51,7 @@ class Participant(db.Model):  # type: ignore
 
     def __repr__(self) -> str:
         return f"{self.first_name} {self.first_name}"
+
+    @classmethod
+    def default_sort(cls):
+        return cls.query.order_by(desc(cls.created_at))
