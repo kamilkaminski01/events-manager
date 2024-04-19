@@ -1,0 +1,11 @@
+.register-participant-page {
+  @include page;
+
+  .register-participant-form {
+    @include page-form;
+
+    .register-participant-form__title {
+      @include page-form__title;
+    }
+  }
+}

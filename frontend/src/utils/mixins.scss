@@ -1,0 +1,22 @@
+@mixin page {
+  min-height: calc(100vh - ($navbar-height + $footer-height));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin page-form {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 25rem;
+  gap: 1em;
+}
+
+@mixin page-form__title {
+  margin-bottom: 0.75em;
+  text-align: center;
+}

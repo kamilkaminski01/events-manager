@@ -13,7 +13,7 @@ import MealOptions from 'components/organisms/MealOptions'
 import { useState } from 'react'
 import { IMealOptions } from 'models/mealOptions'
 
-const RegisterPage = () => {
+const RegisterParticipantPage = () => {
   const methods = useForm()
   const navigate = useNavigate()
   const { openModal } = useModals()
@@ -23,21 +23,18 @@ const RegisterPage = () => {
     chosenMeals: []
   })
 
-  const formID = 'registerForm'
+  const formID = 'registerParticipantForm'
 
   const onSubmit = async (data: FieldValues) => {
     const { firstName, lastName } = data
     const { mealPreference, chosenMeals } = mealOptionsData
 
-    const response = await createParticipant(
-      {
-        firstName,
-        lastName,
-        mealPreference,
-        chosenMeals
-      },
-      { preventDataRefreshAfterRequest: true }
-    )
+    const response = await createParticipant({
+      firstName,
+      lastName,
+      mealPreference,
+      chosenMeals
+    })
 
     if (!response.succeed && response.errors) {
       raiseFieldsErrors(response.errors, methods.setError)
@@ -47,10 +44,13 @@ const RegisterPage = () => {
   }
 
   return (
-    <main className="register-page">
+    <main className="register-participant-page">
       <FormProvider {...methods}>
-        <form className="register-form" id={formID} onSubmit={methods.handleSubmit(onSubmit)}>
-          <h1 className="register-form__title">Register a participant</h1>
+        <form
+          className="register-participant-form"
+          id={formID}
+          onSubmit={methods.handleSubmit(onSubmit)}>
+          <h1 className="register-participant-form__title">Register a participant</h1>
           <Input
             name="firstName"
             placeholder="First Name"
@@ -74,7 +74,7 @@ const RegisterPage = () => {
             }>
             Meal options
           </Button>
-          <Button className="register-form__submit-btn" type="submit" form={formID}>
+          <Button type="submit" form={formID}>
             Register
           </Button>
         </form>
@@ -83,4 +83,4 @@ const RegisterPage = () => {
   )
 }
 
-export default RegisterPage
+export default RegisterParticipantPage

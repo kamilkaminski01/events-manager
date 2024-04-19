@@ -10,8 +10,11 @@ const Navbar = () => {
         Events Manager
       </Link>
       <div className="nav__menu">
+        <Link className="nav__link" to={PATHS.event}>
+          <Button className="nav__btn btn--outline">Create Event</Button>
+        </Link>
         <Link className="nav__link" to={PATHS.register}>
-          <Button className="nav__btn btn--outline">Register</Button>
+          <Button className="nav__btn btn--outline">Register Participant</Button>
         </Link>
       </div>
     </nav>
