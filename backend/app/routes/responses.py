@@ -7,6 +7,10 @@ class ResponseMessage:
         "message": "Object deleted",
         "code": "deleted",
     }
+    UPDATED = {
+        "message": "Object updated",
+        "code": "updated",
+    }
     NOT_FOUND = {
         "message": "Object not found",
         "code": "not_found",

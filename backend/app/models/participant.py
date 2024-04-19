@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import desc
+from sqlalchemy import asc
 
 from app.extensions import db
 
@@ -54,4 +54,4 @@ class Participant(db.Model):  # type: ignore
 
     @classmethod
     def default_sort(cls):
-        return cls.query.order_by(desc(cls.created_at))
+        return cls.query.order_by(asc(cls.created_at))

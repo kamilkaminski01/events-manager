@@ -1,6 +1,8 @@
-from marshmallow import Schema, fields
+from typing import List
 
-from app.models.participant import MealsPreference, MealType
+from marshmallow import Schema, fields, post_load
+
+from app.models.participant import Meal, MealsPreference, MealType
 
 
 def camelcase(s):
@@ -22,6 +24,16 @@ class ParticipantRequestSchema(CamelCaseSchema):
     is_host = fields.Bool(load_default=False)
     meal_preference = fields.Enum(MealsPreference, allow_none=True)
     chosen_meals = fields.List(fields.Enum(MealType), allow_none=True)
+
+    @post_load
+    def prepare_chosen_meals(self, data: dict, **kwargs) -> dict:
+        if chosen_meals_data := data.get("chosen_meals"):
+            chosen_meals: List[Meal] = []
+            for meal_type in chosen_meals_data:
+                meal = Meal.query.filter_by(type=meal_type).first()
+                chosen_meals.append(meal)
+            data["chosen_meals"] = chosen_meals
+        return data
 
 
 class ParticipantResponseSchema(CamelCaseSchema):

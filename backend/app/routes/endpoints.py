@@ -1,5 +1,3 @@
-from typing import List, Optional
-
 from flask import Blueprint, Response, jsonify, make_response, request
 from marshmallow.exceptions import ValidationError
 from sqlalchemy.orm.exc import UnmappedInstanceError
@@ -29,7 +27,7 @@ def create_meal() -> Response:
 def get_participants() -> Response:
     if request.method == "GET":
         response_schema = ParticipantResponseSchema()
-        participants = Participant.query.all()
+        participants = Participant.default_sort().all()
         response = [response_schema.dump(participant) for participant in participants]
         return make_response(jsonify(response), 200)
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
@@ -46,7 +44,7 @@ def create_participant() -> Response:
                 last_name=data["last_name"],
                 is_host=data["is_host"],
                 meal_preference=data.get("meal_preference"),
-                chosen_meals=_get_chosen_meals(data.get("chosen_meals")),
+                chosen_meals=data["chosen_meals"],
             )
             db.session.add(participant)
             db.session.commit()
@@ -54,6 +52,28 @@ def create_participant() -> Response:
             return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
         return make_response(jsonify(response_schema.dump(participant)), 201)
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
+@api.route("/participants/<int:id>/details/", methods=["GET", "PATCH"])
+def participant_details(id: int) -> Response:
+    participant = Participant.query.get(id)
+    if participant:
+        if request.method == "GET":
+            response_schema = ParticipantResponseSchema()
+            response = response_schema.dump(participant)
+            return make_response(jsonify(response), 200)
+        if request.method == "PATCH":
+            try:
+                request_schema = ParticipantRequestSchema()
+                data = request_schema.load(request.get_json(), partial=True)
+                for key, value in data.items():
+                    setattr(participant, key, value)
+                db.session.commit()
+                return make_response(jsonify(ResponseMessage.UPDATED), 200)
+            except ValidationError:
+                return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
+        return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+    return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
 
 
 @api.route("/participants/<int:id>/delete/", methods=["DELETE"])
@@ -64,16 +84,6 @@ def delete_participant(id: int) -> Response:
             db.session.delete(participant)
             db.session.commit()
         except UnmappedInstanceError:
-            return make_response(jsonify(ResponseMessage.NOT_FOUND), 400)
+            return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
         return make_response(jsonify(ResponseMessage.DELETED), 200)
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
-
-
-def _get_chosen_meals(chosen_meals_data: Optional[list]) -> List[Meal]:
-    chosen_meals: List[Meal] = []
-    if chosen_meals_data:
-        for meal_type in chosen_meals_data:
-            meal = Meal.query.filter_by(type=meal_type).first()
-            if meal:
-                chosen_meals.append(meal)
-    return chosen_meals
