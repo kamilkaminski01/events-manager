@@ -1,7 +1,7 @@
 import './style.scss'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import { raiseFieldsErrors } from 'utils/raiseFieldsErrors'
-import useParticipants from 'hooks/useParticipants'
+import useParticipant from 'hooks/useParticipant'
 import Input from 'components/molecules/Input'
 import { valid } from 'utils/Validators/validators'
 import { validSchemas } from 'utils/Validators/validatorsSchemas'
@@ -17,7 +17,7 @@ const RegisterParticipantPage = () => {
   const methods = useForm()
   const navigate = useNavigate()
   const { openModal } = useModals()
-  const { createParticipant } = useParticipants()
+  const { createParticipant } = useParticipant()
   const [mealOptionsData, setMealOptionsData] = useState<IMealOptions>({
     mealPreference: null,
     chosenMeals: []

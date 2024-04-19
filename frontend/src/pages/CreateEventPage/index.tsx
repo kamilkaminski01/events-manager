@@ -4,17 +4,14 @@ import Input from 'components/molecules/Input'
 import { valid } from 'utils/Validators/validators'
 import { validSchemas } from 'utils/Validators/validatorsSchemas'
 import Button from 'components/atoms/Button'
-import useParticipants from 'hooks/useParticipants'
 
 const CreateEventPage = () => {
   const methods = useForm()
-  const { getParticipants } = useParticipants()
 
   const formID = 'createEventForm'
 
   const onSubmit = (data: FieldValues) => {
     console.log(data)
-    getParticipants()
   }
 
   return (

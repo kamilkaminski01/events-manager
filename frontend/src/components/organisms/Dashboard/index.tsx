@@ -1,9 +1,11 @@
 import ParticipantsList from 'components/molecules/ParticipantsList'
-import { DashboardProps } from './interface'
 import './style.scss'
-import Spinner from 'components/atoms/Spinner'
+import { useContext } from 'react'
+import { ParticipantsContext } from 'providers/participants/context'
 
-const Dashboard = ({ participants, isError, isLoading, getParticipants }: DashboardProps) => {
+const Dashboard = () => {
+  const { participantsData, isError } = useContext(ParticipantsContext)
+
   return (
     <>
       {isError ? (
@@ -12,34 +14,25 @@ const Dashboard = ({ participants, isError, isLoading, getParticipants }: Dashbo
         </div>
       ) : (
         <>
-          {isLoading ? (
-            <Spinner />
+          {participantsData?.length ? (
+            <div className="dashboard">
+              <div className="dashboard__table">
+                <div className="table__header">
+                  <strong>First name</strong>
+                  <strong>Last name</strong>
+                  <strong>Is host</strong>
+                  <strong>Meal preference</strong>
+                  <strong>Chosen meals</strong>
+                  <strong>Actions</strong>
+                </div>
+                <ParticipantsList participants={participantsData} />
+              </div>
+            </div>
           ) : (
-            <>
-              {participants?.length ? (
-                <div className="dashboard">
-                  <div className="dashboard__table">
-                    <div className="table__header">
-                      <strong>First name</strong>
-                      <strong>Last name</strong>
-                      <strong>Is host</strong>
-                      <strong>Meal preference</strong>
-                      <strong>Chosen meals</strong>
-                      <strong>Actions</strong>
-                    </div>
-                    <ParticipantsList
-                      participants={participants}
-                      getParticipants={getParticipants}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="dashboard dashboard--no-data">
-                  <h3 className="dashboard__title">Participants</h3>
-                  <p className="dashboard__subtitle">There are no participants</p>
-                </div>
-              )}
-            </>
+            <div className="dashboard dashboard--no-data">
+              <h3 className="dashboard__title">Participants</h3>
+              <p className="dashboard__subtitle">There are no participants</p>
+            </div>
           )}
         </>
       )}

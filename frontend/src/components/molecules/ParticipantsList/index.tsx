@@ -6,9 +6,9 @@ import EditIcon from 'assets/icons/edit-icon.svg'
 import DeleteIcon from 'assets/icons/delete-icon.svg'
 import { useModals } from 'providers/modals/context'
 import ParticipantDeletionModal from './partials/modals/ParticipantDeletion'
-import ParticipantEdition from 'components/molecules/ParticipantsList/partials/modals/ParticipantEdition'
+import ParticipantEdition from './partials/modals/ParticipantEdition'
 
-const ParticipantsList = ({ participants, getParticipants }: ParticipantsListProps) => {
+const ParticipantsList = ({ participants }: ParticipantsListProps) => {
   const { openModal } = useModals()
 
   return (
@@ -44,7 +44,6 @@ const ParticipantsList = ({ participants, getParticipants }: ParticipantsListPro
                     lastName={participant.lastName}
                     chosenMealPreference={participant.mealPreference}
                     chosenMeals={participant.chosenMeals}
-                    getParticipants={getParticipants}
                   />
                 )
               }
@@ -58,7 +57,6 @@ const ParticipantsList = ({ participants, getParticipants }: ParticipantsListPro
                     id={participant.id}
                     firstName={participant.firstName}
                     lastName={participant.lastName}
-                    getParticipants={getParticipants}
                   />
                 )
               }

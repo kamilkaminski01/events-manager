@@ -2,8 +2,13 @@ import { IServerResponse } from 'models/serverResponse'
 import { useCallback, useState } from 'react'
 import axiosDefault from 'setup/axios/defaultInstance'
 import { parseApiErrors } from 'utils/parseApiErrors'
+import { generatePath } from 'react-router-dom'
 
-const useData = <T, R = T, C = T>(endpoint: string) => {
+interface useDataOptions {
+  transformGetData: () => void
+}
+
+const useData = <T, R = T, C = T>(endpoint: string, { ...options }: useDataOptions) => {
   const [data, setData] = useState<R>()
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
@@ -37,6 +42,7 @@ const useData = <T, R = T, C = T>(endpoint: string) => {
       requestOptions?: { preventDataRefreshAfterRequest?: boolean }
     ): Promise<IServerResponse<T>> => {
       const { preventDataRefreshAfterRequest } = requestOptions || {}
+      const { transformGetData } = options || {}
 
       try {
         setIsLoading(true)
@@ -44,7 +50,7 @@ const useData = <T, R = T, C = T>(endpoint: string) => {
 
         await axiosDefault.post(endpoint, data)
 
-        if (!preventDataRefreshAfterRequest) getData()
+        if (!preventDataRefreshAfterRequest) transformGetData ? transformGetData() : getData()
 
         return { succeed: true }
       } catch (error) {
@@ -61,6 +67,8 @@ const useData = <T, R = T, C = T>(endpoint: string) => {
 
   const updateData = useCallback(
     async (data: Partial<T>, id?: number): Promise<IServerResponse<T>> => {
+      const { transformGetData } = options || {}
+
       try {
         setIsLoading(true)
         setIsError(false)
@@ -69,7 +77,7 @@ const useData = <T, R = T, C = T>(endpoint: string) => {
 
         await axiosDefault.patch(path, data)
 
-        getData()
+        transformGetData ? transformGetData() : getData()
 
         return { succeed: true }
       } catch (error) {
@@ -84,7 +92,34 @@ const useData = <T, R = T, C = T>(endpoint: string) => {
     [endpoint, getData]
   )
 
-  return { data, isLoading, isError, getData, createData, updateData, setData }
+  const deleteData = useCallback(
+    async (endpoint: string, id: number): Promise<IServerResponse<T>> => {
+      const { transformGetData } = options || {}
+
+      try {
+        setIsLoading(true)
+        setIsError(false)
+
+        const path = generatePath(endpoint, { id: id }) + '/'
+
+        await axiosDefault.delete(path)
+
+        transformGetData ? transformGetData() : getData()
+
+        return { succeed: true }
+      } catch (error) {
+        setIsError(true)
+
+        return parseApiErrors(error)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [endpoint, getData]
+  )
+
+  return { data, isLoading, isError, getData, createData, updateData, deleteData, setData }
 }
 
 export default useData

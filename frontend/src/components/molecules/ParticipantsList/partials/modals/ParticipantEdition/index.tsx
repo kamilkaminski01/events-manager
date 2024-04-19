@@ -16,11 +16,10 @@ const ParticipantEditionModal = ({
   firstName,
   lastName,
   chosenMealPreference,
-  chosenMeals,
-  getParticipants
+  chosenMeals
 }: ParticipantEditionModalProps) => {
   const { closeModal } = useModals()
-  const { updateParticipant } = useParticipant(id)
+  const { updateParticipant } = useParticipant()
   const methods = useForm()
 
   const formID = 'participantForm'
@@ -30,16 +29,12 @@ const ParticipantEditionModal = ({
     const mealPreference = formValues.mealPreference === '-' ? null : formValues.mealPreference
     const chosenMeals = filterChosenMeals(formValues)
 
-    const response = await updateParticipant({ firstName, lastName, mealPreference, chosenMeals })
-
-    handleApiResponse(
-      response,
-      () => {
-        closeModal()
-        getParticipants()
-      },
-      methods.setError
+    const response = await updateParticipant(
+      { firstName, lastName, mealPreference, chosenMeals },
+      id
     )
+
+    handleApiResponse(response, closeModal, methods.setError)
   }
 
   return (

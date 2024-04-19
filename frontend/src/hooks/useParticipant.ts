@@ -1,61 +1,33 @@
-import { IServerResponse } from 'models/serverResponse'
-import { useCallback, useState } from 'react'
-import axiosDefault from 'setup/axios/defaultInstance'
-import { ENDPOINTS } from 'utils/consts'
-import { parseApiErrors } from 'utils/parseApiErrors'
-import { generatePath } from 'react-router-dom'
 import { IParticipant } from 'models/participant'
+import { ICreateParticipant } from 'models/requests/createParticipant'
+import { ENDPOINTS } from 'utils/consts'
+import useData from './useData'
+import { useContext } from 'react'
+import { ParticipantsContext } from 'providers/participants/context'
 
-const useParticipant = (id: number) => {
-  const [participantData, setParticipantData] = useState({} as IParticipant)
+const useParticipant = () => {
+  const { updateParticipantsData } = useContext(ParticipantsContext)
 
-  const getParticipantData = useCallback(async (): Promise<IServerResponse> => {
-    try {
-      const response = await axiosDefault.get(
-        generatePath(ENDPOINTS.participantDetails, { id: `${id}` })
-      )
-
-      setParticipantData(response.data)
-
-      return { succeed: true }
-    } catch (error) {
-      return parseApiErrors(error)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const updateParticipant = useCallback(
-    async (data: Partial<IParticipant>): Promise<IServerResponse> => {
-      try {
-        const endpoint = generatePath(ENDPOINTS.participantDetails, { id: `${id}` }) + '/'
-        await axiosDefault.patch(endpoint, data)
-
-        return { succeed: true }
-      } catch (error) {
-        return parseApiErrors(error)
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
-
-  const deleteParticipant = useCallback(async (): Promise<IServerResponse> => {
-    try {
-      const endpoint = generatePath(ENDPOINTS.deleteParticipant, { id: `${id}` }) + '/'
-      await axiosDefault.delete(endpoint)
-
-      return { succeed: true }
-    } catch (error) {
-      return parseApiErrors(error)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const {
+    data: participant,
+    isError,
+    getData: getParticipant,
+    createData: createParticipant,
+    updateData: updateParticipant,
+    deleteData: deleteParticipant,
+    ...rest
+  } = useData<IParticipant, IParticipant, ICreateParticipant>(ENDPOINTS.participants, {
+    transformGetData: updateParticipantsData
+  })
 
   return {
-    participantData,
-    getParticipantData,
+    participant,
+    isError,
+    getParticipant,
+    createParticipant,
     updateParticipant,
-    deleteParticipant
+    deleteParticipant,
+    ...rest
   }
 }
 

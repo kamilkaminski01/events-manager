@@ -7,5 +7,4 @@ export interface ParticipantEditionModalProps {
   lastName: string
   chosenMealPreference: EMealPreference | null
   chosenMeals: EMealType[]
-  getParticipants: () => void
 }
