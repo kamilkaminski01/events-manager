@@ -15,7 +15,7 @@ repos:
     rev: v1.7.0
     hooks:
       - id: docformatter
-        exclude: ^migrations/
+        exclude: migrations/
         args: [ --in-place ]
 
   - repo: local

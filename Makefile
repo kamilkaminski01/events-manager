@@ -13,7 +13,7 @@ isort:
 	docker compose run --rm web isort .
 
 black:
-	docker compose run --rm web black .
+	docker compose run --rm web black . --exclude="migrations/"
 
 flake8:
 	docker compose run --rm web flake8 .
