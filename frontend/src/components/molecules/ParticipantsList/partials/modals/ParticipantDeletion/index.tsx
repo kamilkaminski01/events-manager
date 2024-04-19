@@ -1,14 +1,14 @@
 import Modal from 'components/organisms/Modal'
 import useParticipant from 'hooks/useParticipant'
-import { ParticipantDeletionProps } from './interface'
+import { ParticipantDeletionModalProps } from './interface'
 import { useModals } from 'providers/modals/context'
 
-const DeleteAccountModal = ({
+const ParticipantDeletionModal = ({
   id,
   firstName,
   lastName,
   getParticipants
-}: ParticipantDeletionProps) => {
+}: ParticipantDeletionModalProps) => {
   const { closeModal } = useModals()
   const { deleteParticipant } = useParticipant(id)
 
@@ -28,4 +28,4 @@ const DeleteAccountModal = ({
   )
 }
 
-export default DeleteAccountModal
+export default ParticipantDeletionModal

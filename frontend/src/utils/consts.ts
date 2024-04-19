@@ -10,6 +10,6 @@ export const PATHS = {
 
 export const ENDPOINTS = {
   participants: 'participants/',
-  participantDetails: 'participant/:id/details/',
+  participantDetails: 'participants/:id/details/',
   deleteParticipant: 'participants/:id/delete/'
 }

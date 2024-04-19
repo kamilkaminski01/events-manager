@@ -5,7 +5,8 @@ import FalseIcon from 'assets/icons/false-icon.svg'
 import EditIcon from 'assets/icons/edit-icon.svg'
 import DeleteIcon from 'assets/icons/delete-icon.svg'
 import { useModals } from 'providers/modals/context'
-import ParticipantDeletion from './partials/modals/ParticipantDeletion'
+import ParticipantDeletionModal from './partials/modals/ParticipantDeletion'
+import ParticipantEdition from 'components/molecules/ParticipantsList/partials/modals/ParticipantEdition'
 
 const ParticipantsList = ({ participants, getParticipants }: ParticipantsListProps) => {
   const { openModal } = useModals()
@@ -32,13 +33,28 @@ const ParticipantsList = ({ participants, getParticipants }: ParticipantsListPro
             </>
           </span>
           <span className="participant__actions">
-            <img src={EditIcon} alt="Edit" />
+            <img
+              src={EditIcon}
+              alt="Edit"
+              onClick={() =>
+                openModal(
+                  <ParticipantEdition
+                    id={participant.id}
+                    firstName={participant.firstName}
+                    lastName={participant.lastName}
+                    chosenMealPreference={participant.mealPreference}
+                    chosenMeals={participant.chosenMeals}
+                    getParticipants={getParticipants}
+                  />
+                )
+              }
+            />
             <img
               src={DeleteIcon}
               alt="Delete"
               onClick={() =>
                 openModal(
-                  <ParticipantDeletion
+                  <ParticipantDeletionModal
                     id={participant.id}
                     firstName={participant.firstName}
                     lastName={participant.lastName}

@@ -24,17 +24,20 @@ const useParticipant = (id: number) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const updateParticipant = useCallback(async (data: FormData): Promise<IServerResponse> => {
-    try {
-      const endpoint = generatePath(ENDPOINTS.participantDetails, { id: `${id}` }) + '/'
-      await axiosDefault.patch(endpoint, data)
+  const updateParticipant = useCallback(
+    async (data: Partial<IParticipant>): Promise<IServerResponse> => {
+      try {
+        const endpoint = generatePath(ENDPOINTS.participantDetails, { id: `${id}` }) + '/'
+        await axiosDefault.patch(endpoint, data)
 
-      return { succeed: true }
-    } catch (error) {
-      return parseApiErrors(error)
-    }
+        return { succeed: true }
+      } catch (error) {
+        return parseApiErrors(error)
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    []
+  )
 
   const deleteParticipant = useCallback(async (): Promise<IServerResponse> => {
     try {

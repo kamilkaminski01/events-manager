@@ -9,7 +9,7 @@ import Button from 'components/atoms/Button'
 import { PATHS } from 'utils/consts'
 import { useNavigate } from 'react-router-dom'
 import { useModals } from 'providers/modals/context'
-import MealOptions from 'components/molecules/MealOptions'
+import MealOptions from 'components/organisms/MealOptions'
 import { useState } from 'react'
 import { IMealOptions } from 'models/mealOptions'
 

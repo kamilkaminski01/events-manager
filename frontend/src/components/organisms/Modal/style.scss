@@ -35,6 +35,18 @@ $horizontal-padding: 2.5em;
     color: $carbon;
 
     overflow-y: auto;
+
+    .modal__form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5em;
+    }
+
+    .modal__form--grouped {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5em;
+    }
   }
 
   .modal__footer {
