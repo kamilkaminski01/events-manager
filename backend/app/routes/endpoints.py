@@ -3,10 +3,16 @@ from marshmallow.exceptions import ValidationError
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from app.extensions import db
+from app.models.event import Event
 from app.models.participant import Meal, Participant
 
 from .responses import ResponseMessage
-from .schemas import ParticipantRequestSchema, ParticipantResponseSchema
+from .schemas import (
+    EventRequestSchema,
+    EventResponseSchema,
+    ParticipantRequestSchema,
+    ParticipantResponseSchema,
+)
 
 api = Blueprint("api", __name__, url_prefix="/api/v1")
 
@@ -36,9 +42,10 @@ def list_participants() -> Response:
 @api.route("/participants/", methods=["POST"])
 def create_participant() -> Response:
     if request.method == "POST":
+        request_schema = ParticipantRequestSchema()
         response_schema = ParticipantResponseSchema()
         try:
-            data = ParticipantRequestSchema().load(request.get_json())
+            data = request_schema.load(request.get_json())
             participant = Participant(
                 first_name=data["first_name"],
                 last_name=data["last_name"],
@@ -71,13 +78,15 @@ def update_participant(id: int) -> Response:
     if request.method == "PATCH":
         participant = Participant.query.get(id)
         if participant:
+            request_schema = ParticipantRequestSchema()
+            response_schema = ParticipantResponseSchema()
             try:
-                request_schema = ParticipantRequestSchema()
                 data = request_schema.load(request.get_json(), partial=True)
                 for key, value in data.items():
                     setattr(participant, key, value)
                 db.session.commit()
-                return make_response(jsonify(ResponseMessage.UPDATED), 200)
+                response = response_schema.dump(participant)
+                return make_response(jsonify(response), 200)
             except ValidationError:
                 return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
         return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
@@ -94,4 +103,47 @@ def delete_participant(id: int) -> Response:
         except UnmappedInstanceError:
             return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
         return make_response(jsonify(ResponseMessage.DELETED), 200)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
+@api.route("/events/", methods=["GET"])
+def list_events() -> Response:
+    if request.method == "GET":
+        response_schema = EventResponseSchema()
+        events = Event.default_sort().all()
+        response = [response_schema.dump(event) for event in events]
+        return make_response(jsonify(response), 200)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
+@api.route("/events/", methods=["POST"])
+def create_event() -> Response:
+    if request.method == "POST":
+        request_schema = EventRequestSchema()
+        response_schema = EventResponseSchema()
+        try:
+            data = request_schema.load(request.get_json())
+            event = Event(name=data["name"], host_id=data["host_id"])
+            host_participant = Participant.query.get(data["host_id"])
+
+            event.host = host_participant
+            host_participant.is_host = True
+
+            participants = Participant.query.filter(
+                Participant.id.in_(data["participants"])
+            ).all()
+            event.participants.extend(participants)
+
+            db.session.add(event)
+            db.session.add(host_participant)
+            db.session.commit()
+            response = {
+                "id": event.id,
+                "name": event.name,
+                "host": host_participant,
+                "participants": event.participants,
+            }
+        except ValidationError:
+            return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
+        return make_response(jsonify(response_schema.dump(response)), 201)
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)

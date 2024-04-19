@@ -43,3 +43,16 @@ class ParticipantResponseSchema(CamelCaseSchema):
     is_host = fields.Bool()
     meal_preference = fields.Enum(MealsPreference, by_value=True)
     chosen_meals = fields.List(fields.Str())
+
+
+class EventRequestSchema(CamelCaseSchema):
+    name = fields.Str()
+    host_id = fields.Integer()
+    participants = fields.List(fields.Integer())
+
+
+class EventResponseSchema(CamelCaseSchema):
+    id = fields.Integer()
+    name = fields.Str()
+    host = fields.Nested(ParticipantResponseSchema)
+    participants = fields.Nested(ParticipantResponseSchema, many=True)
