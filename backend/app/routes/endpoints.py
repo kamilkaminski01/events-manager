@@ -98,6 +98,9 @@ def delete_participant(id: int) -> Response:
     if request.method == "DELETE":
         try:
             participant = Participant.query.get(id)
+            if participant.is_host:
+                event = Event.query.filter_by(host=participant).first()
+                event.host = None
             db.session.delete(participant)
             db.session.commit()
         except UnmappedInstanceError:
@@ -129,10 +132,11 @@ def create_event() -> Response:
             event.host = host_participant
             host_participant.is_host = True
 
-            participants = Participant.query.filter(
-                Participant.id.in_(data["participants"])
-            ).all()
-            event.participants.extend(participants)
+            if participants_ids := data.get("participants"):
+                participants = Participant.query.filter(
+                    Participant.id.in_(participants_ids)
+                ).all()
+                event.participants.extend(participants)
 
             db.session.add(event)
             db.session.add(host_participant)
@@ -149,12 +153,38 @@ def create_event() -> Response:
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
 
 
+@api.route("/events/<int:id>/", methods=["PATCH"])
+def update_event(id: int) -> Response:
+    if request.method == "PATCH":
+        event = Event.query.get(id)
+        if event:
+            request_schema = EventRequestSchema()
+            response_schema = EventResponseSchema()
+            try:
+                data = request_schema.load(request.get_json(), partial=True)
+                host_id = data["host_id"]
+                if event.host.id != host_id:
+                    event.host.is_host = False
+                    new_host = Participant.query.get(host_id)
+                    new_host.is_host = True
+                for key, value in data.items():
+                    setattr(event, key, value)
+                db.session.commit()
+                response = response_schema.dump(event)
+                return make_response(jsonify(response), 200)
+            except ValidationError:
+                return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
+        return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
 @api.route("/events/<int:id>/", methods=["DELETE"])
 def delete_event(id: int) -> Response:
     if request.method == "DELETE":
         try:
             event = Event.query.get(id)
-            event.host.is_host = False
+            if event.host:
+                event.host.is_host = False
             for participant in event.participants:
                 participant.event.remove(event)
             db.session.delete(event)

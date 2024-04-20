@@ -17,7 +17,7 @@ class Event(db.Model):  # type: ignore
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     name = db.Column(db.String(255), nullable=False)
-    host_id = db.Column(db.Integer, db.ForeignKey("participants.id"))
+    host_id = db.Column(db.Integer, db.ForeignKey("participants.id"), nullable=True)
     host = db.relationship(
         "Participant",
         foreign_keys=[host_id],

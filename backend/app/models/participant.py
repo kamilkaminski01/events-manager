@@ -50,7 +50,7 @@ class Participant(db.Model):  # type: ignore
     )
 
     def __repr__(self) -> str:
-        return f"{self.first_name} {self.first_name}"
+        return f"{self.first_name} {self.last_name}"
 
     @classmethod
     def default_sort(cls):
