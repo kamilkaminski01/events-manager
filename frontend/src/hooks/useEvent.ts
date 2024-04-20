@@ -18,7 +18,7 @@ const useEvent = () => {
     updateData: updateEvent,
     deleteData: deleteEvent,
     ...rest
-  } = useData<IEvent, IEvent, ICreateEvent>(ENDPOINTS.events, {
+  } = useData<ICreateEvent, IEvent, ICreateEvent>(ENDPOINTS.events, {
     transformGetData: () => {
       updateEventsData()
       updateParticipantsData()

@@ -1,5 +1,5 @@
 import './style.scss'
-import { IMealOptionsProps } from './interface'
+import { IMealOptionsModalProps } from './interface'
 import { filterChosenMeals } from 'utils/filterChosenMeals'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import Modal from 'components/organisms/Modal'
@@ -7,7 +7,7 @@ import { useModals } from 'providers/modals/context'
 import MealTypes from 'components/molecules/MealTypes'
 import MealPreference from 'components/molecules/MealPreference'
 
-const MealOptions = ({ mealOptionsData, setMealOptionsData }: IMealOptionsProps) => {
+const MealOptionsModal = ({ mealOptionsData, setMealOptionsData }: IMealOptionsModalProps) => {
   const { closeModal } = useModals()
   const methods = useForm()
 
@@ -16,6 +16,7 @@ const MealOptions = ({ mealOptionsData, setMealOptionsData }: IMealOptionsProps)
   const onSubmit = (data: FieldValues) => {
     const mealPreference = data.mealPreference === '-' ? null : data.mealPreference
     const chosenMeals = filterChosenMeals(data)
+
     setMealOptionsData({ mealPreference, chosenMeals })
     closeModal()
   }
@@ -36,4 +37,4 @@ const MealOptions = ({ mealOptionsData, setMealOptionsData }: IMealOptionsProps)
   )
 }
 
-export default MealOptions
+export default MealOptionsModal

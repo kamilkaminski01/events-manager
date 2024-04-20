@@ -1,0 +1,36 @@
+.participants__modal-participant {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  .participant-checkbox-wrapper {
+    @include checkbox-wrapper;
+    padding-left: 2em;
+
+    .participant-checkbox-wrapper__checkbox {
+      position: absolute;
+      opacity: 0;
+
+      &:checked ~ .participant-checkbox-wrapper__indicator {
+        background-color: $primary-color;
+        border: none;
+      }
+
+      &:checked ~ .participant-checkbox-wrapper__indicator::after {
+        display: block;
+      }
+    }
+
+    .participant-checkbox-wrapper__indicator {
+      position: absolute;
+      top: -1px;
+      left: 0;
+
+      @include checkbox-wrapper__indicator;
+    }
+
+    .participant-checkbox-wrapper__content {
+      color: $carbon;
+    }
+  }
+}

@@ -9,7 +9,7 @@ import Button from 'components/atoms/Button'
 import { PATHS } from 'utils/consts'
 import { useNavigate } from 'react-router-dom'
 import { useModals } from 'providers/modals/context'
-import MealOptions from 'components/organisms/MealOptions'
+import MealOptionsModal from 'components/organisms/MealOptionsModal'
 import { useState } from 'react'
 import { IMealOptions } from 'models/mealOptions'
 
@@ -66,7 +66,7 @@ const RegisterParticipantPage = () => {
             type="button"
             onClick={() =>
               openModal(
-                <MealOptions
+                <MealOptionsModal
                   mealOptionsData={mealOptionsData}
                   setMealOptionsData={setMealOptionsData}
                 />

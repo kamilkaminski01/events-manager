@@ -7,13 +7,35 @@ import DeletionModal from 'components/molecules/DeletionModal'
 import { ENDPOINTS } from 'utils/consts'
 import useEvent from 'hooks/useEvent'
 import EventEdition from './partials/modals/EventEdition'
+import ParticipantsModal from 'components/molecules/ParticipantsModal'
+import { IParticipant } from 'models/participant'
+import classNames from 'classnames'
+import { useContext } from 'react'
+import { ParticipantsContext } from 'providers/participants/context'
+import { FieldValues } from 'react-hook-form'
+import { filterParticipantsIds } from 'utils/filterParticipantsIds'
 
 const EventsList = ({ events }: EventsListProps) => {
+  const { participantsData } = useContext(ParticipantsContext)
   const { openModal, closeModal } = useModals()
-  const { deleteEvent } = useEvent()
+  const { updateEvent, deleteEvent } = useEvent()
+
+  const filterEventsParticipantsIds = (participants: IParticipant[]) => {
+    return participants.map((participant) => participant.id)
+  }
 
   const onDeleteSubmit = async (id: number) => {
     const response = await deleteEvent(ENDPOINTS.eventDetails, id)
+
+    if (response.succeed) {
+      closeModal()
+    }
+  }
+
+  const onParticipantsSubmit = async (id: number, data: FieldValues) => {
+    const participants = filterParticipantsIds(data)
+
+    const response = await updateEvent({ participants }, id)
 
     if (response.succeed) {
       closeModal()
@@ -26,12 +48,25 @@ const EventsList = ({ events }: EventsListProps) => {
         <div key={id} className="event">
           <span>{event.name}</span>
           <span>{event.host ? `${event.host.firstName} ${event.host.lastName}` : '-'}</span>
-          <span className="event__participants">
-            {event.participants.map((participant) => (
-              <span key={participant.id}>
-                {participant.firstName} {participant.lastName}
-              </span>
-            ))}
+          <span
+            className={classNames('event__participants', {
+              'event__participants--populated': event.participants.length > 0,
+              'event__participants--empty': event.participants.length === 0
+            })}
+            onClick={() => {
+              const handleSubmit = (data: FieldValues) => {
+                onParticipantsSubmit(event.id, data)
+              }
+
+              openModal(
+                <ParticipantsModal
+                  participants={participantsData}
+                  participantsIds={filterEventsParticipantsIds(event.participants)}
+                  onSubmit={handleSubmit}
+                />
+              )
+            }}>
+            {event.participants.length ? 'Show participants' : 'Add participants'}
           </span>
           <span className="actions">
             <img

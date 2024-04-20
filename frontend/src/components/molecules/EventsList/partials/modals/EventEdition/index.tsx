@@ -1,3 +1,4 @@
+import './style.scss'
 import { EventEditionProps } from './interface'
 import { FieldValues, FormProvider, useForm } from 'react-hook-form'
 import Modal from 'components/organisms/Modal'
@@ -38,16 +39,19 @@ const EventEditionModal = ({ id, name, host }: EventEditionProps) => {
             defaultValue={name}
             validators={{ required: valid.required, ...validSchemas.name }}
           />
-          <Select
-            name="hostId"
-            options={notHostsParticipantsOptions(participantsData)}
-            defaultOption={
-              host && {
-                value: host.id,
-                text: `${host?.id} - ${host?.firstName} ${host?.lastName}`
+          <div className="event-edition__host">
+            <p className="event-edition__host-title">Events host</p>
+            <Select
+              name="hostId"
+              options={notHostsParticipantsOptions(participantsData)}
+              defaultOption={
+                host && {
+                  value: host.id,
+                  text: `${host?.id} - ${host?.firstName} ${host?.lastName}`
+                }
               }
-            }
-          />
+            />
+          </div>
         </form>
       </FormProvider>
     </Modal>

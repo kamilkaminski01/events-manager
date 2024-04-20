@@ -1,0 +1,6 @@
+.event-edition__host {
+  .event-edition__host-title {
+    @include select-title;
+    margin-bottom: 0.25em;
+  }
+}

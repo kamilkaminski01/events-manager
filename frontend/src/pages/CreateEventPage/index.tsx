@@ -6,16 +6,20 @@ import { validSchemas } from 'utils/Validators/validatorsSchemas'
 import Button from 'components/atoms/Button'
 import Select from 'components/atoms/Select'
 import { notHostsParticipantsOptions } from 'utils/filterNotHostsParticipants'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { ParticipantsContext } from 'providers/participants/context'
 import { raiseFieldsErrors } from 'utils/raiseFieldsErrors'
 import { PATHS } from 'utils/consts'
 import useEvent from 'hooks/useEvent'
 import { useNavigate } from 'react-router-dom'
+import ParticipantsModal from 'components/molecules/ParticipantsModal'
+import { ModalsContext } from 'providers/modals/context'
 
 const CreateEventPage = () => {
   const { participantsData } = useContext(ParticipantsContext)
+  const { openModal } = useContext(ModalsContext)
   const { createEvent } = useEvent()
+  const [participantsIds, setParticipantsIds] = useState<number[]>([])
   const navigate = useNavigate()
   const methods = useForm()
 
@@ -26,7 +30,7 @@ const CreateEventPage = () => {
   const onSubmit = async (data: FieldValues) => {
     const { name, hostId } = data
 
-    const response = await createEvent({ name, hostId })
+    const response = await createEvent({ name, hostId, participants: participantsIds })
 
     if (!response.succeed && response.errors) {
       raiseFieldsErrors(response.errors, methods.setError)
@@ -45,9 +49,22 @@ const CreateEventPage = () => {
             placeholder="Event Name"
             validators={{ required: valid.required, ...validSchemas.name }}
           />
-          <h3 className="create-event-form__host-title">Pick a host</h3>
-          <Select name="hostId" options={participantsOptions} />
-          <Button className="btn--outline" type="button" onClick={() => console.log('add')}>
+          <div className="create-event-form__host">
+            <h3 className="create-event-form__host-title">Pick a host</h3>
+            <Select name="hostId" options={participantsOptions} />
+          </div>
+          <Button
+            className="btn--outline"
+            type="button"
+            onClick={() =>
+              openModal(
+                <ParticipantsModal
+                  participants={participantsData}
+                  participantsIds={participantsIds}
+                  setParticipantsIds={setParticipantsIds}
+                />
+              )
+            }>
             Add participants
           </Button>
           <Button type="submit" form={formID} disable={participantsOptions.length === 0}>

@@ -162,13 +162,20 @@ def update_event(id: int) -> Response:
             response_schema = EventResponseSchema()
             try:
                 data = request_schema.load(request.get_json(), partial=True)
-                host_id = data["host_id"]
-                if event.host.id != host_id:
-                    event.host.is_host = False
-                    new_host = Participant.query.get(host_id)
-                    new_host.is_host = True
-                for key, value in data.items():
-                    setattr(event, key, value)
+                if host_id := data.get("host_id"):
+                    if event.host.id != host_id:
+                        event.host.is_host = False
+                        new_host = Participant.query.get(host_id)
+                        new_host.is_host = True
+                if not data.get("participants"):
+                    for key, value in data.items():
+                        setattr(event, key, value)
+                else:
+                    event.participants.clear()
+                    participants = Participant.query.filter(
+                        Participant.id.in_(data["participants"])
+                    ).all()
+                    event.participants.extend(participants)
                 db.session.commit()
                 response = response_schema.dump(event)
                 return make_response(jsonify(response), 200)
