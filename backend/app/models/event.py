@@ -21,7 +21,7 @@ class Event(db.Model):  # type: ignore
     host = db.relationship(
         "Participant",
         foreign_keys=[host_id],
-        backref="hosted_events",
+        backref="host",
     )
     participants = db.relationship(
         "Participant",

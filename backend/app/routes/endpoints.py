@@ -147,3 +147,19 @@ def create_event() -> Response:
             return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
         return make_response(jsonify(response_schema.dump(response)), 201)
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
+@api.route("/events/<int:id>/", methods=["DELETE"])
+def delete_event(id: int) -> Response:
+    if request.method == "DELETE":
+        try:
+            event = Event.query.get(id)
+            event.host.is_host = False
+            for participant in event.participants:
+                participant.event.remove(event)
+            db.session.delete(event)
+            db.session.commit()
+        except UnmappedInstanceError:
+            return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
+        return make_response(jsonify(ResponseMessage.DELETED), 200)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
