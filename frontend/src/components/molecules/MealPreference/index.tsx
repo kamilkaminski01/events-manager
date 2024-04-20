@@ -1,18 +1,18 @@
 import './style.scss'
 import { MealPreferenceProps } from './interface'
 import { EMealPreference } from 'models/mealPreference'
-import { useFormContext } from 'react-hook-form'
+import Select from 'components/atoms/Select'
 
 const MealPreference = ({ chosenMealPreference, transformData = false }: MealPreferenceProps) => {
-  const { register } = useFormContext()
-
   return (
     <div className="meal-preference">
       <h3 className="meal-preference__title">Meal preference</h3>
-      <select
-        id="mealPreference"
-        data-testid="mealPreference"
-        className="meal-preference__select"
+      <Select
+        name="mealPreference"
+        options={[
+          { value: EMealPreference.Carnivorous, text: 'Carnivorous' },
+          { value: EMealPreference.Vegetarian, text: 'Vegetarian' }
+        ]}
         defaultValue={
           chosenMealPreference
             ? transformData
@@ -20,11 +20,8 @@ const MealPreference = ({ chosenMealPreference, transformData = false }: MealPre
               : chosenMealPreference
             : undefined
         }
-        {...register('mealPreference')}>
-        <option>-</option>
-        <option value={EMealPreference.Carnivorous}>Carnivorous</option>
-        <option value={EMealPreference.Vegetarian}>Vegetarian</option>
-      </select>
+        blankOption
+      />
     </div>
   )
 }

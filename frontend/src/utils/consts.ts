@@ -5,6 +5,7 @@ export const API_URL =
 
 export const PATHS = {
   home: '/',
+  homeWithEvents: '/#events',
   register: '/register',
   event: '/event'
 }

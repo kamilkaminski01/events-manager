@@ -1,0 +1,12 @@
+.select {
+  padding: 0.25rem;
+  font-size: 1rem;
+  border: 1px solid $moon;
+  border-radius: 3px;
+  outline: none;
+}
+
+.select__option--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

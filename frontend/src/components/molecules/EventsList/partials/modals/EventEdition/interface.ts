@@ -1,9 +1,7 @@
 import { IParticipant } from 'models/participant'
 
-export interface IEvent {
+export interface EventEditionProps {
   id: number
   name: string
-  hostId?: number
   host: IParticipant | null
-  participants: IParticipant[]
 }

@@ -4,9 +4,11 @@ import useData from 'hooks/useData'
 import { ENDPOINTS } from 'utils/consts'
 import { ICreateEvent } from 'models/requests/createEvent'
 import { EventsContext } from 'providers/events/context'
+import { ParticipantsContext } from 'providers/participants/context'
 
 const useEvent = () => {
   const { updateEventsData } = useContext(EventsContext)
+  const { updateParticipantsData } = useContext(ParticipantsContext)
 
   const {
     data: event,
@@ -17,7 +19,10 @@ const useEvent = () => {
     deleteData: deleteEvent,
     ...rest
   } = useData<IEvent, IEvent, ICreateEvent>(ENDPOINTS.events, {
-    transformGetData: updateEventsData
+    transformGetData: () => {
+      updateEventsData()
+      updateParticipantsData()
+    }
   })
 
   return {
