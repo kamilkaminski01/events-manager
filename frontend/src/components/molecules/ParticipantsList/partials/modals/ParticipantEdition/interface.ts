@@ -5,6 +5,6 @@ export interface ParticipantEditionModalProps {
   id: number
   firstName: string
   lastName: string
-  chosenMealPreference: EMealPreference | null
+  chosenMealPreference: EMealPreference
   chosenMeals: EMealType[]
 }

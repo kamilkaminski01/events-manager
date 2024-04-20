@@ -6,15 +6,18 @@ import { BrowserRouter } from 'react-router-dom'
 import ScrollToTop from 'components/atoms/ScrollToTop'
 import ParticipantsProvider from 'providers/participants'
 import ModalsProvider from 'providers/modals'
+import EventsProvider from 'providers/events'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <ScrollToTop>
         <ParticipantsProvider>
-          <ModalsProvider>
-            <App />
-          </ModalsProvider>
+          <EventsProvider>
+            <ModalsProvider>
+              <App />
+            </ModalsProvider>
+          </EventsProvider>
         </ParticipantsProvider>
       </ScrollToTop>
     </BrowserRouter>

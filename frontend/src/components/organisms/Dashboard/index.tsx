@@ -1,37 +1,49 @@
 import ParticipantsList from 'components/molecules/ParticipantsList'
+import EventsList from 'components/molecules/EventsList'
 import './style.scss'
-import { useContext } from 'react'
-import { ParticipantsContext } from 'providers/participants/context'
+import { DashboardProps } from './interface'
+import { IParticipant } from 'models/participant'
+import { IEvent } from 'models/event'
 
-const Dashboard = () => {
-  const { participantsData, isError } = useContext(ParticipantsContext)
-
+const Dashboard = ({ contentType, content, isError }: DashboardProps) => {
   return (
     <>
       {isError ? (
         <div className="dashboard dashboard--no-data">
-          <h3 className="dashboard__title">Error during loading participants</h3>
+          <h3 className="dashboard__title">Error during loading {contentType}</h3>
         </div>
       ) : (
         <>
-          {participantsData?.length ? (
+          {content.length ? (
             <div className="dashboard">
-              <div className="dashboard__table">
-                <div className="table__header">
-                  <strong>First name</strong>
-                  <strong>Last name</strong>
-                  <strong>Is host</strong>
-                  <strong>Meal preference</strong>
-                  <strong>Chosen meals</strong>
-                  <strong>Actions</strong>
+              {contentType === 'participants' ? (
+                <div className="dashboard__table participants">
+                  <div className="table__header">
+                    <strong>First name</strong>
+                    <strong>Last name</strong>
+                    <strong>Is host</strong>
+                    <strong>Meal preference</strong>
+                    <strong>Chosen meals</strong>
+                    <strong>Actions</strong>
+                  </div>
+                  <ParticipantsList participants={content as IParticipant[]} />
                 </div>
-                <ParticipantsList participants={participantsData} />
-              </div>
+              ) : (
+                <div className="dashboard__table events">
+                  <div className="table__header">
+                    <strong>Name</strong>
+                    <strong>Host</strong>
+                    <strong>Participants</strong>
+                    <strong>Actions</strong>
+                  </div>
+                  <EventsList events={content as IEvent[]} />
+                </div>
+              )}
             </div>
           ) : (
             <div className="dashboard dashboard--no-data">
-              <h3 className="dashboard__title">Participants</h3>
-              <p className="dashboard__subtitle">There are no participants</p>
+              <h3 className="dashboard__title">{contentType}</h3>
+              <p className="dashboard__subtitle">There are no {contentType}</p>
             </div>
           )}
         </>

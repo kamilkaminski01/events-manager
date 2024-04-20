@@ -20,3 +20,34 @@
   margin-bottom: 0.75em;
   text-align: center;
 }
+
+@mixin table-list {
+  display: grid;
+  text-align: center;
+
+  padding: 0.8em 0.5em;
+
+  &:nth-child(odd) {
+    background-color: $alabaster;
+  }
+
+  & > span:not(.actions) {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      cursor: pointer;
+      margin: 0 0.25em;
+    }
+  }
+}

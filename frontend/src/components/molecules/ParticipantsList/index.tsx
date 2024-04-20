@@ -5,11 +5,22 @@ import FalseIcon from 'assets/icons/false-icon.svg'
 import EditIcon from 'assets/icons/edit-icon.svg'
 import DeleteIcon from 'assets/icons/delete-icon.svg'
 import { useModals } from 'providers/modals/context'
-import ParticipantDeletionModal from './partials/modals/ParticipantDeletion'
+import DeletionModal from 'components/molecules/DeletionModal'
 import ParticipantEdition from './partials/modals/ParticipantEdition'
+import useParticipant from 'hooks/useParticipant'
+import { ENDPOINTS } from 'utils/consts'
 
 const ParticipantsList = ({ participants }: ParticipantsListProps) => {
-  const { openModal } = useModals()
+  const { openModal, closeModal } = useModals()
+  const { deleteParticipant } = useParticipant()
+
+  const onDeleteSubmit = async (id: number) => {
+    const response = await deleteParticipant(ENDPOINTS.participantDetails, id)
+
+    if (response.succeed) {
+      closeModal()
+    }
+  }
 
   return (
     <>
@@ -32,7 +43,7 @@ const ParticipantsList = ({ participants }: ParticipantsListProps) => {
                 : '-'}
             </>
           </span>
-          <span className="participant__actions">
+          <span className="actions">
             <img
               src={EditIcon}
               alt="Edit"
@@ -53,10 +64,9 @@ const ParticipantsList = ({ participants }: ParticipantsListProps) => {
               alt="Delete"
               onClick={() =>
                 openModal(
-                  <ParticipantDeletionModal
-                    id={participant.id}
-                    firstName={participant.firstName}
-                    lastName={participant.lastName}
+                  <DeletionModal
+                    deleteName={`${participant.firstName} ${participant.lastName}`}
+                    onSubmit={() => onDeleteSubmit(participant.id)}
                   />
                 )
               }

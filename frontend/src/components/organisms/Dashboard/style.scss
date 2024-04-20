@@ -15,8 +15,12 @@
 
     font-size: 0.875em;
 
-    & > * {
+    &.participants > * {
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr;
+    }
+
+    &.events > * {
+      grid-template-columns: 1fr 1fr 1fr 0.5fr;
     }
 
     .table__header {
@@ -38,6 +42,7 @@
   .dashboard__title {
     font-weight: 700;
     color: $carbon;
+    text-transform: capitalize;
   }
 
   .dashboard__subtitle {
