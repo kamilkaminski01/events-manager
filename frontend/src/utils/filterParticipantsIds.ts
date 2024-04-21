@@ -1,4 +1,5 @@
 import { FieldValues } from 'react-hook-form'
+import { IParticipant } from 'models/participant'
 
 export const filterParticipantsIds = (participantsIds: FieldValues) => {
   return (
@@ -7,4 +8,8 @@ export const filterParticipantsIds = (participantsIds: FieldValues) => {
       .filter(([_id, value]) => value === true)
       .map(([id]) => parseInt(id))
   )
+}
+
+export const filterEventsParticipantsIds = (participants: IParticipant[]) => {
+  return participants.map((participant) => participant.id)
 }

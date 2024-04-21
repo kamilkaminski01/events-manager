@@ -6,8 +6,10 @@ export const API_URL =
 export const PATHS = {
   home: '/',
   homeWithEvents: '/#events',
-  register: '/register',
-  event: '/event'
+  participant: '/participant',
+  participantDetails: '/participant/:id',
+  event: '/event',
+  eventDetails: '/event/:id'
 }
 
 export const ENDPOINTS = {

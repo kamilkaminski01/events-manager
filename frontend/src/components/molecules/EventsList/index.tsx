@@ -4,25 +4,21 @@ import { useModals } from 'providers/modals/context'
 import EditIcon from 'assets/icons/edit-icon.svg'
 import DeleteIcon from 'assets/icons/delete-icon.svg'
 import DeletionModal from 'components/molecules/DeletionModal'
-import { ENDPOINTS } from 'utils/consts'
+import { ENDPOINTS, PATHS } from 'utils/consts'
 import useEvent from 'hooks/useEvent'
 import EventEdition from './partials/modals/EventEdition'
 import ParticipantsModal from 'components/molecules/ParticipantsModal'
-import { IParticipant } from 'models/participant'
 import classNames from 'classnames'
 import { useContext } from 'react'
 import { ParticipantsContext } from 'providers/participants/context'
 import { FieldValues } from 'react-hook-form'
-import { filterParticipantsIds } from 'utils/filterParticipantsIds'
+import { filterParticipantsIds, filterEventsParticipantsIds } from 'utils/filterParticipantsIds'
+import { generatePath, Link } from 'react-router-dom'
 
 const EventsList = ({ events }: EventsListProps) => {
   const { participantsData } = useContext(ParticipantsContext)
   const { openModal, closeModal } = useModals()
   const { updateEvent, deleteEvent } = useEvent()
-
-  const filterEventsParticipantsIds = (participants: IParticipant[]) => {
-    return participants.map((participant) => participant.id)
-  }
 
   const onDeleteSubmit = async (id: number) => {
     const response = await deleteEvent(ENDPOINTS.eventDetails, id)
@@ -44,10 +40,18 @@ const EventsList = ({ events }: EventsListProps) => {
 
   return (
     <>
-      {events?.map((event, id) => (
-        <div key={id} className="event">
-          <span>{event.name}</span>
-          <span>{event.host ? `${event.host.firstName} ${event.host.lastName}` : '-'}</span>
+      {events?.map((event) => (
+        <div key={event.id} className="event">
+          <Link to={generatePath(PATHS.eventDetails, { id: event.id })}>{event.name}</Link>
+          <>
+            {event.host ? (
+              <Link to={generatePath(PATHS.participantDetails, { id: event.host.id })}>
+                {event.host.firstName} {event.host.lastName}
+              </Link>
+            ) : (
+              <span>-</span>
+            )}
+          </>
           <span
             className={classNames('event__participants', {
               'event__participants--populated': event.participants.length > 0,
@@ -82,6 +86,7 @@ const EventsList = ({ events }: EventsListProps) => {
               onClick={() =>
                 openModal(
                   <DeletionModal
+                    title="Event"
                     deleteName={event.name}
                     onSubmit={() => onDeleteSubmit(event.id)}
                   />

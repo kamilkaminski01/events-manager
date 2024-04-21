@@ -8,7 +8,8 @@ import { useModals } from 'providers/modals/context'
 import DeletionModal from 'components/molecules/DeletionModal'
 import ParticipantEdition from './partials/modals/ParticipantEdition'
 import useParticipant from 'hooks/useParticipant'
-import { ENDPOINTS } from 'utils/consts'
+import { ENDPOINTS, PATHS } from 'utils/consts'
+import { generatePath, Link } from 'react-router-dom'
 
 const ParticipantsList = ({ participants }: ParticipantsListProps) => {
   const { openModal, closeModal } = useModals()
@@ -24,9 +25,11 @@ const ParticipantsList = ({ participants }: ParticipantsListProps) => {
 
   return (
     <>
-      {participants?.map((participant, id) => (
-        <div key={id} className="participant">
-          <span>{participant.firstName}</span>
+      {participants?.map((participant) => (
+        <div key={participant.id} className="participant">
+          <Link to={generatePath(PATHS.participantDetails, { id: participant.id })}>
+            {participant.firstName}
+          </Link>
           <span>{participant.lastName}</span>
           <span>
             {participant.isHost ? (
@@ -65,6 +68,7 @@ const ParticipantsList = ({ participants }: ParticipantsListProps) => {
               onClick={() =>
                 openModal(
                   <DeletionModal
+                    title="Participant"
                     deleteName={`${participant.firstName} ${participant.lastName}`}
                     onSubmit={() => onDeleteSubmit(participant.id)}
                   />

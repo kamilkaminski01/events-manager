@@ -7,3 +7,7 @@ export const filterChosenMeals = (data: FieldValues) => {
     .filter((key) => data[key])
     .map((key) => key as EMealType)
 }
+
+export const upperCaseMeals = (chosenMeals: EMealType[]) => {
+  return chosenMeals.map((chosenMeal) => chosenMeal.toUpperCase())
+}

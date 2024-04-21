@@ -14,12 +14,13 @@ const useData = <T, R = T, C = T>(endpoint: string, { ...options }: useDataOptio
   const [isError, setIsError] = useState(false)
 
   const getData = useCallback(
-    async (): Promise<IServerResponse<R>> => {
+    async (id?: number | string): Promise<IServerResponse<R>> => {
       try {
         setIsLoading(true)
         setIsError(false)
 
-        const response = await axiosDefault.get(endpoint)
+        const path = id ? endpoint + `${id}/` : endpoint
+        const response = await axiosDefault.get(path)
 
         const responseData = response.data
         setData(responseData)

@@ -13,7 +13,7 @@ const Navbar = () => {
         <Link className="nav__link" to={PATHS.event}>
           <Button className="nav__btn btn--outline">Create Event</Button>
         </Link>
-        <Link className="nav__link" to={PATHS.register}>
+        <Link className="nav__link" to={PATHS.participant}>
           <Button className="nav__btn btn--outline">Register Participant</Button>
         </Link>
       </div>

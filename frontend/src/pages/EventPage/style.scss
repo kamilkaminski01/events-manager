@@ -1,0 +1,15 @@
+.event-page {
+  @include item-page;
+
+  .event__no-data {
+    @include item-page__no-data;
+
+    .event__no-data-title {
+      @include item-page__no-data-title;
+    }
+
+    .event__no-data-subtitle {
+      @include item-page__no-data-subtitle;
+    }
+  }
+}

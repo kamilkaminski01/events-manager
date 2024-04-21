@@ -55,7 +55,7 @@ const ParticipantEditionModal = ({
           />
           <div className="modal__form--grouped">
             <MealPreference chosenMealPreference={chosenMealPreference} transformData={true} />
-            <MealTypes chosenMeals={chosenMeals} transformData={true} />
+            <MealTypes chosenMeals={chosenMeals} transformData />
           </div>
         </form>
       </FormProvider>

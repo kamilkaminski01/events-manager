@@ -5,3 +5,14 @@
   gap: 1em;
   font-size: 1.1rem;
 }
+
+.meal-types__modal-form {
+  display: flex;
+  flex-direction: column;
+
+  .meal-types {
+    .checkbox-wrapper {
+      height: 3.75em;
+    }
+  }
+}

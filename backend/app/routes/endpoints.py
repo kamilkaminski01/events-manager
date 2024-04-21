@@ -153,6 +153,18 @@ def create_event() -> Response:
     return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
 
 
+@api.route("/events/<int:id>/", methods=["GET"])
+def get_event(id: int) -> Response:
+    if request.method == "GET":
+        event = Event.query.get(id)
+        if event:
+            response_schema = EventResponseSchema()
+            response = response_schema.dump(event)
+            return make_response(jsonify(response), 200)
+        return make_response(jsonify(ResponseMessage.NOT_FOUND), 404)
+    return make_response(jsonify(ResponseMessage.INVALID_REQUEST), 404)
+
+
 @api.route("/events/<int:id>/", methods=["PATCH"])
 def update_event(id: int) -> Response:
     if request.method == "PATCH":
@@ -163,10 +175,10 @@ def update_event(id: int) -> Response:
             try:
                 data = request_schema.load(request.get_json(), partial=True)
                 if host_id := data.get("host_id"):
-                    if event.host.id != host_id:
+                    if event.host and event.host.id != host_id:
                         event.host.is_host = False
-                        new_host = Participant.query.get(host_id)
-                        new_host.is_host = True
+                    new_host = Participant.query.get(host_id)
+                    new_host.is_host = True
                 if not data.get("participants"):
                     for key, value in data.items():
                         setattr(event, key, value)

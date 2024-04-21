@@ -2,19 +2,16 @@ import './style.scss'
 import { MealTypesProps } from './interface'
 import Checkbox from 'components/atoms/Checkbox'
 import { EMealType } from 'models/mealType'
+import { upperCaseMeals } from 'utils/filterChosenMeals'
 
 const MealTypes = ({ chosenMeals, transformData = false }: MealTypesProps) => {
-  const transformedChosenMeals = (chosenMeals: EMealType[]) => {
-    return chosenMeals.map((chosenMeal) => chosenMeal.toUpperCase())
-  }
-
   return (
     <div className="meal-types">
       <Checkbox
         name={EMealType.Breakfast}
         defaultValue={
           transformData
-            ? transformedChosenMeals(chosenMeals).includes(EMealType.Breakfast)
+            ? upperCaseMeals(chosenMeals).includes(EMealType.Breakfast)
             : chosenMeals.includes(EMealType.Breakfast)
         }>
         Breakfast
@@ -23,7 +20,7 @@ const MealTypes = ({ chosenMeals, transformData = false }: MealTypesProps) => {
         name={EMealType.Dinner}
         defaultValue={
           transformData
-            ? transformedChosenMeals(chosenMeals).includes(EMealType.Dinner)
+            ? upperCaseMeals(chosenMeals).includes(EMealType.Dinner)
             : chosenMeals.includes(EMealType.Dinner)
         }>
         Dinner
@@ -32,7 +29,7 @@ const MealTypes = ({ chosenMeals, transformData = false }: MealTypesProps) => {
         name={EMealType.Supper}
         defaultValue={
           transformData
-            ? transformedChosenMeals(chosenMeals).includes(EMealType.Supper)
+            ? upperCaseMeals(chosenMeals).includes(EMealType.Supper)
             : chosenMeals.includes(EMealType.Supper)
         }>
         Supper
