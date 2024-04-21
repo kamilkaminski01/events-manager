@@ -27,6 +27,9 @@ def upgrade():
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("type"),
     )
+    op.execute(sa.text("INSERT INTO meals (type) VALUES ('BREAKFAST')"))
+    op.execute(sa.text("INSERT INTO meals (type) VALUES ('DINNER')"))
+    op.execute(sa.text("INSERT INTO meals (type) VALUES ('SUPPER')"))
     op.create_table(
         "participants",
         sa.Column("id", sa.Integer(), nullable=False),
