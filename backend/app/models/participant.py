@@ -5,6 +5,14 @@ from sqlalchemy import asc
 
 from app.extensions import db
 
+meals_order = {"Breakfast": 1, "Dinner": 2, "Supper": 3}
+
+
+def sort_chosen_meals(meals):
+    return sorted(
+        meals, key=lambda meal: meals_order.get(meal.type.value, float("inf"))
+    )
+
 
 class MealType(enum.Enum):
     BREAKFAST = "Breakfast"
@@ -30,9 +38,6 @@ class Meal(db.Model):  # type: ignore
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum(MealType), unique=True, nullable=False)
 
-    def __repr__(self) -> str:
-        return self.type.value
-
 
 class Participant(db.Model):  # type: ignore
     __tablename__ = "participants"
@@ -50,7 +55,7 @@ class Participant(db.Model):  # type: ignore
     )
 
     def __repr__(self) -> str:
-        return f"{self.first_name} {self.last_name}"
+        return f"<Participant {self.first_name} {self.last_name}>"
 
     @classmethod
     def default_sort(cls):

@@ -65,8 +65,7 @@ def update_participant(id: int) -> Response:
         for key, value in data.items():
             setattr(participant, key, value)
         db.session.commit()
-        response = response_schema.dump(participant)
-        return make_response(jsonify(response), 200)
+        return make_response(jsonify(response_schema.dump(participant)), 200)
     except ValidationError:
         return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
 
@@ -80,7 +79,7 @@ def delete_participant(id: int) -> Response:
             event.host = None
     db.session.delete(participant)
     db.session.commit()
-    return make_response(jsonify(ResponseMessage.DELETED), 200)
+    return make_response(jsonify(ResponseMessage.DELETED), 204)
 
 
 @api.route("/events/", methods=["GET"])
@@ -98,22 +97,26 @@ def create_event() -> Response:
     try:
         data = request_schema.load(request.get_json())
         event = Event(name=data["name"], host_id=data["host_id"])
-        host_participant = Participant.query.get(data["host_id"])
-
-        event.host = host_participant
-        host_participant.is_host = True
-
-        if participants_ids := data.get("participants"):
-            participants = Participant.query.filter(
-                Participant.id.in_(participants_ids)
-            ).all()
-            event.participants.extend(participants)
-
+        _add_host_to_event(event, data)
+        _add_participants_to_event(event, data)
         db.session.add(event)
         db.session.commit()
     except ValidationError:
         return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
     return make_response(jsonify(response_schema.dump(event)), 201)
+
+
+def _add_host_to_event(event: Event, data: dict) -> None:
+    hosting_participant = Participant.query.get(data["host_id"])
+    event.host = hosting_participant
+    hosting_participant.is_host = True
+
+
+def _add_participants_to_event(event: Event, data: dict) -> None:
+    if participants_ids := data.get("participants"):
+        participants = Participant.id.in_(participants_ids)
+        participants_queryset = Participant.query.filter(participants).all()
+        event.participants.extend(participants_queryset)
 
 
 @api.route("/events/<int:id>/", methods=["GET"])
@@ -131,7 +134,7 @@ def delete_event(id: int) -> Response:
         event.host.is_host = False
     db.session.delete(event)
     db.session.commit()
-    return make_response(jsonify(ResponseMessage.DELETED), 200)
+    return make_response(jsonify(ResponseMessage.DELETED), 204)
 
 
 @api.route("/events/<int:id>/", methods=["PATCH"])
@@ -172,6 +175,6 @@ def _update_event_participants(event: Event, data: dict) -> None:
     if participants_ids and len(participants_ids):
         new = Participant.query.filter(Participant.id.in_(participants_ids)).all()
         event.participants = new
-    elif participants_ids and not len(participants_ids):
+    elif participants_ids is not None and not len(participants_ids):
         event.participants.clear()
     data.pop("participants", None)

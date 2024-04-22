@@ -2,7 +2,13 @@ from typing import List
 
 from marshmallow import Schema, fields, post_load
 
-from app.models.participant import Meal, MealsPreference, MealType
+from app.models.participant import (
+    Meal,
+    MealsPreference,
+    MealType,
+    Participant,
+    sort_chosen_meals,
+)
 
 
 def camelcase(s):
@@ -47,14 +53,17 @@ class ParticipantResponseSchema(CamelCaseSchema):
     last_name = fields.Str()
     is_host = fields.Bool()
     meal_preference = fields.Enum(MealsPreference, by_value=True)
-    chosen_meals = fields.List(fields.Str())
+    chosen_meals = fields.Method("get_sorted_chosen_meals")
     hosted_event = fields.Nested(EventsForParticipantResponseSchema)
     events = fields.Nested(EventsForParticipantResponseSchema, many=True)
+
+    def get_sorted_chosen_meals(self, obj: Participant) -> list:
+        return [meal.type.value for meal in sort_chosen_meals(obj.chosen_meals)]
 
 
 class EventRequestSchema(CamelCaseSchema):
     name = fields.Str()
-    host_id = fields.Integer()
+    host_id = fields.Integer(required=True)
     participants = fields.List(fields.Integer())
 
 
