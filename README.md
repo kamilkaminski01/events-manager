@@ -21,6 +21,7 @@ cd events-manager/
 make build
 make run
 ```
+The application will be running at `localhost:3000`
 
 If `make` is not supported, the associated Docker commands can be used directly
 in order to build and run the project:
@@ -60,6 +61,7 @@ cd events-manager/frontend
 npm install
 npm run dev
 ```
+The application will be running at `localhost:3000`
 
 ## Application setup
 
