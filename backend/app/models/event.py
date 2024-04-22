@@ -26,7 +26,7 @@ class Event(db.Model):  # type: ignore
     participants = db.relationship(
         "Participant",
         secondary=event_participants,
-        backref="event",
+        backref="events",
     )
 
     def __repr__(self) -> str:
