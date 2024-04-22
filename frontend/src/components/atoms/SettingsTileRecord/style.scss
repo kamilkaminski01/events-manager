@@ -7,20 +7,21 @@
     text-transform: capitalize;
   }
 
+  .settings-tile-record__label--bold {
+    color: $carbon;
+    font-weight: 700;
+  }
+
   .settings-tile-record__value {
     display: flex;
     flex-direction: column;
 
     color: $carbon;
-  }
 
-  .settings-tile-record__value--bold {
-    font-weight: 700;
-  }
-
-  .settings-tile-record__value--second {
-    grid-row: 2;
-    grid-column: 2;
+    &.link {
+      width: fit-content;
+      color: $primary-color;
+    }
   }
 
   .settings-tile-record__btn {

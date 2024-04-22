@@ -12,3 +12,10 @@ export const notHostsParticipantsOptions = (participants: IParticipant[]) => {
     text: `${participant.id} - ${participant.firstName} ${participant.lastName}`
   }))
 }
+
+export const participantsWithoutEventHost = (
+  participants: IParticipant[],
+  eventsHostId: number
+): IParticipant[] => {
+  return participants.filter((participant) => participant.id !== eventsHostId)
+}

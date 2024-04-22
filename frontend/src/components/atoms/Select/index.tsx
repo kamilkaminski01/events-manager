@@ -30,7 +30,7 @@ const Select = ({
           </option>
         ))
       ) : (
-        <option className="select__option--disabled">No more participants can be hosts</option>
+        <option className="select__option--disabled">No participants can be hosts</option>
       )}
     </select>
   )

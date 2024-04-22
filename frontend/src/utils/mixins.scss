@@ -68,7 +68,11 @@
   }
 
   a {
-    color: $primary-color;
+    transition: color ease-in-out 0.1s;
+
+    &:hover {
+      color: $primary-color;
+    }
   }
 
   .actions {

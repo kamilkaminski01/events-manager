@@ -45,17 +45,11 @@ const EventDataTile = ({ event, getEvent }: EventDataTileProps) => {
       <SettingsTileRecord
         label="Host"
         value={event.host ? `${event.host.firstName} ${event.host.lastName}` : '-'}
-        button={
-          event.host !== null
-            ? {
-                text: 'Update',
-                onClick: () =>
-                  openModal(
-                    <HostModal eventId={event.id} getEvent={getEvent} defaultHost={event.host} />
-                  )
-              }
-            : undefined
-        }
+        button={{
+          text: 'Update',
+          onClick: () =>
+            openModal(<HostModal eventId={event.id} getEvent={getEvent} defaultHost={event.host} />)
+        }}
       />
       <SettingsTileRecord
         label="Participants"
@@ -68,6 +62,7 @@ const EventDataTile = ({ event, getEvent }: EventDataTileProps) => {
                 participants={participantsData}
                 participantsIds={filterEventsParticipantsIds(event.participants)}
                 onSubmit={onParticipantsSubmit}
+                eventsHostId={event.host?.id}
               />
             )
         }}

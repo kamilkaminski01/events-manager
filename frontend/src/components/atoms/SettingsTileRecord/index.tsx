@@ -1,14 +1,9 @@
-import classNames from 'classnames'
 import { SettingsTileRecordProps } from './interface'
 import './style.scss'
+import { Link } from 'react-router-dom'
+import classNames from 'classnames'
 
-const SettingsTileRecord = ({
-  label,
-  value,
-  secondValue,
-  button,
-  className
-}: SettingsTileRecordProps) => {
+const SettingsTileRecord = ({ label, value, link, button, className }: SettingsTileRecordProps) => {
   const renderValue = () => {
     if (!value || (typeof value !== 'number' && value.length === 0)) {
       return <span>-</span>
@@ -20,19 +15,13 @@ const SettingsTileRecord = ({
   }
 
   return (
-    <div className={classNames('settings-tile-record', className)}>
-      <label className="settings-tile-record__label">{label}</label>
-      <div
-        className={classNames('settings-tile-record__value', {
-          'settings-tile-record__value--bold': secondValue
-        })}>
-        {renderValue()}
-      </div>
-
-      {secondValue && (
-        <span className="settings-tile-record__value settings-tile-record__value--second">
-          {secondValue}
-        </span>
+    <div className="settings-tile-record">
+      <label className={classNames('settings-tile-record__label', className)}>{label}</label>
+      {!link && <div className="settings-tile-record__value">{renderValue()}</div>}
+      {link && (
+        <Link to={link.to} className="settings-tile-record__value link">
+          {link.text}
+        </Link>
       )}
 
       {button && (

@@ -67,6 +67,7 @@ const EventsList = ({ events }: EventsListProps) => {
                   participants={participantsData}
                   participantsIds={filterEventsParticipantsIds(event.participants)}
                   onSubmit={handleSubmit}
+                  eventsHostId={event.host?.id}
                 />
               )
             }}>

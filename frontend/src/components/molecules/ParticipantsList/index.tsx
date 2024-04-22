@@ -30,7 +30,9 @@ const ParticipantsList = ({ participants }: ParticipantsListProps) => {
           <Link to={generatePath(PATHS.participantDetails, { id: participant.id })}>
             {participant.firstName}
           </Link>
-          <span>{participant.lastName}</span>
+          <Link to={generatePath(PATHS.participantDetails, { id: participant.id })}>
+            {participant.lastName}
+          </Link>
           <span>
             {participant.isHost ? (
               <img src={TrueIcon} alt="Host" />

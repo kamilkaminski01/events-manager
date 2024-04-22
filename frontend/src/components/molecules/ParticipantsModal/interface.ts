@@ -7,4 +7,5 @@ export interface ParticipantsModalProps {
   participantsIds: number[]
   setParticipantsIds?: Dispatch<SetStateAction<number[]>>
   onSubmit?: (data: FieldValues) => void
+  eventsHostId?: number
 }

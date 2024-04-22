@@ -10,6 +10,7 @@
     .participant-checkbox-wrapper__checkbox {
       position: absolute;
       opacity: 0;
+      pointer-events: none;
 
       &:checked ~ .participant-checkbox-wrapper__indicator {
         background-color: $primary-color;

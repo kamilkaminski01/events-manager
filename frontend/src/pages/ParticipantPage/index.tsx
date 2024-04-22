@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import ParticipantDataTile from 'components/organisms/ParticipantDataTile'
 import Spinner from 'components/atoms/Spinner'
 import DeletionTile from 'components/organisms/DeletionTile'
+import ParticipantEventsTile from 'components/molecules/ParticipantEventsTile'
 
 const ParticipantPage = () => {
   const { participant, getParticipant, isError } = useParticipant()
@@ -21,6 +22,8 @@ const ParticipantPage = () => {
       {participant ? (
         <>
           <ParticipantDataTile participant={participant} getParticipant={getParticipant} />
+          <ParticipantEventsTile participant={participant} hosted />
+          <ParticipantEventsTile participant={participant} />
           <DeletionTile itemType="participant" item={participant} />
         </>
       ) : isError ? (
