@@ -4,7 +4,7 @@ from app.models.participant import Meal, Participant
 
 def create_participant(app):
     with app.app_context():
-        breakfast, dinner, supper = __query_meals()
+        breakfast, dinner, supper = query_meals()
         participant = Participant(
             first_name="Adam",
             last_name="Test",
@@ -18,7 +18,7 @@ def create_participant(app):
 
 def create_bulk_participants(app):
     with app.app_context():
-        breakfast, dinner, supper = __query_meals()
+        breakfast, dinner, supper = query_meals()
         participant1 = Participant(
             first_name="Kamil",
             last_name="Test",
@@ -44,7 +44,7 @@ def create_bulk_participants(app):
         db.session.commit()
 
 
-def __query_meals():
+def query_meals():
     breakfast = Meal.query.filter_by(type="BREAKFAST").first()
     supper = Meal.query.filter_by(type="SUPPER").first()
     dinner = Meal.query.filter_by(type="DINNER").first()

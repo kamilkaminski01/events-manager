@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy.exc import IntegrityError
 
 from app import create_app, db
 from app.config import TestConfig
@@ -6,11 +7,14 @@ from app.models.participant import Meal
 
 
 def initialize_db_with_dependent_data():
-    breakfast = Meal(type="BREAKFAST")
-    dinner = Meal(type="DINNER")
-    supper = Meal(type="SUPPER")
-    db.session.add_all([breakfast, dinner, supper])
-    db.session.commit()
+    try:
+        breakfast = Meal(type="BREAKFAST")
+        dinner = Meal(type="DINNER")
+        supper = Meal(type="SUPPER")
+        db.session.add_all([breakfast, dinner, supper])
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
 
 
 @pytest.fixture()
