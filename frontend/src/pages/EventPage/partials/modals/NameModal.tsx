@@ -32,7 +32,7 @@ const NameModal = ({ eventId, getEvent, defaultValue }: EventDataModalProps) => 
             name="name"
             placeholder="Event name"
             defaultValue={typeof defaultValue === 'string' ? defaultValue : undefined}
-            validators={{ required: valid.required, ...validSchemas.name }}
+            validators={{ required: valid.required, ...validSchemas.eventName }}
           />
         </form>
       </FormProvider>

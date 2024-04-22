@@ -47,7 +47,7 @@ const CreateEventPage = () => {
           <Input
             name="name"
             placeholder="Event Name"
-            validators={{ required: valid.required, ...validSchemas.name }}
+            validators={{ required: valid.required, ...validSchemas.eventName }}
           />
           <div className="create-event-form__host">
             <h3 className="create-event-form__host-title">Pick a host</h3>
