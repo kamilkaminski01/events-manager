@@ -1,3 +1,5 @@
+# This docker-compose file is designed for development purposes only
+
 services:
   web:
     build:
