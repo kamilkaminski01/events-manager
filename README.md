@@ -85,7 +85,6 @@ All frontend code is written in `TypeScript`, formatted and verified by the `pre
 and `eslint` tools.
 
 
-
 ## Demo
 
 ![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo1.png)
@@ -97,4 +96,3 @@ and `eslint` tools.
 ![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo7.png)
 ![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo8.png)
 ![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo9.png)
-![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo10.png)
