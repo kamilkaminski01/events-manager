@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
-from app.cli.initialize_data import cmd
+from app.cli.commands import cmd
 from app.routes.endpoints import api
 
 from .config import Config

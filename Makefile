@@ -1,4 +1,4 @@
-.PHONY: build run recreate initial-data isort black flake8 mypy test lint frontcheck migrations migrate clear
+.PHONY: build run recreate initial-data clear-data isort black flake8 mypy test lint frontcheck migrations migrate clear
 
 build:
 	docker compose build
@@ -11,6 +11,9 @@ recreate:
 
 initial-data:
 	docker compose run --rm web flask cmd initialize_data
+
+clear-data:
+	docker compose run --rm web flask cmd clear_data
 
 isort:
 	docker compose run --rm web isort .

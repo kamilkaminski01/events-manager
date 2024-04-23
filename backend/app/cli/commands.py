@@ -38,7 +38,7 @@ def initialize_data():
         Participant(
             first_name="James",
             last_name="William",
-            is_host=False,
+            is_host=True,
             meal_preference="VEGETARIAN",
             chosen_meals=[dinner, supper],
         ),
@@ -83,4 +83,14 @@ def initialize_data():
 
     db.session.add_all(participants)
     db.session.add_all(events)
+    db.session.commit()
+
+
+@cmd.cli.command("clear_data")
+def clear_data():
+    db.session.rollback()
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        if table.fullname != "meals":
+            db.session.execute(table.delete())
     db.session.commit()
