@@ -9,8 +9,8 @@ export const valid = {
     message: 'Incorrect format'
   },
   eventNamePattern: {
-    value: /^[a-zA-Z0-9]+$/,
-    message: 'Name must contain only letters and numbers'
+    value: /^[a-zA-Z0-9\s]+$/,
+    message: 'Name must contain only letters, numbers and be separated by spaces'
   },
   minLength: (length: number) => {
     return {

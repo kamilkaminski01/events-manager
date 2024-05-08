@@ -37,7 +37,7 @@ const EventEditionModal = ({ id, name, host }: EventEditionProps) => {
             name="name"
             placeholder="Name"
             defaultValue={name}
-            validators={{ required: valid.required, ...validSchemas.name }}
+            validators={{ required: valid.required, ...validSchemas.eventName }}
           />
           <div className="event-edition__host">
             <p className="event-edition__host-title">Events host</p>
