@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, jsonify, make_response, request
+from flask import Blueprint, Response, abort, jsonify, make_response, request
 from marshmallow.exceptions import ValidationError
 
 from app.extensions import db
@@ -46,9 +46,11 @@ def create_participant() -> Response:
 
 @api.route("/participants/<int:id>/", methods=["GET"])
 def get_participant(id: int) -> Response:
-    participant = Participant.query.get_or_404(id)
+    participant = db.session.get(Participant, id)  # type: ignore[attr-defined]
+    if not participant:
+        abort(404)
     if participant.is_host:
-        hosted_event = Event.query.filter_by(host_id=participant.id).first()
+        hosted_event = db.session.query(Event).filter_by(host_id=participant.id).first()
         participant.hosted_event = hosted_event
     response_schema = ParticipantResponseSchema()
     response = response_schema.dump(participant)
@@ -57,7 +59,9 @@ def get_participant(id: int) -> Response:
 
 @api.route("/participants/<int:id>/", methods=["PATCH"])
 def update_participant(id: int) -> Response:
-    participant = Participant.query.get_or_404(id)
+    participant = db.session.get(Participant, id)  # type: ignore[attr-defined]
+    if not participant:
+        abort(404)
     request_schema = ParticipantRequestSchema()
     response_schema = ParticipantResponseSchema()
     try:
@@ -72,9 +76,11 @@ def update_participant(id: int) -> Response:
 
 @api.route("/participants/<int:id>/", methods=["DELETE"])
 def delete_participant(id: int) -> Response:
-    participant = Participant.query.get_or_404(id)
+    participant = db.session.get(Participant, id)  # type: ignore[attr-defined]
+    if not participant:
+        abort(404)
     if participant.is_host:
-        event = Event.query.filter_by(host=participant).first()
+        event = db.session.query(Event).filter_by(host=participant).first()
         if event and event.host:
             event.host = None
     db.session.delete(participant)
@@ -107,21 +113,23 @@ def create_event() -> Response:
 
 
 def _add_host_to_event(event: Event, data: dict) -> None:
-    hosting_participant = Participant.query.get(data["host_id"])
-    event.host = hosting_participant
-    hosting_participant.is_host = True
+    host = db.session.get(Participant, data["host_id"])  # type: ignore[attr-defined]
+    event.host = host
+    host.is_host = True
 
 
 def _add_participants_to_event(event: Event, data: dict) -> None:
     if participants_ids := data.get("participants"):
-        participants = Participant.id.in_(participants_ids)
-        participants_queryset = Participant.query.filter(participants).all()
-        event.participants.extend(participants_queryset)
+        condition = Participant.id.in_(participants_ids)
+        participants = db.session.query(Participant).filter(condition).all()
+        event.participants.extend(participants)
 
 
 @api.route("/events/<int:id>/", methods=["GET"])
 def get_event(id: int) -> Response:
-    event = Event.query.get_or_404(id)
+    event = db.session.get(Event, id)  # type: ignore[attr-defined]
+    if not event:
+        abort(404)
     response_schema = EventResponseSchema()
     response = response_schema.dump(event)
     return make_response(jsonify(response), 200)
@@ -129,7 +137,9 @@ def get_event(id: int) -> Response:
 
 @api.route("/events/<int:id>/", methods=["DELETE"])
 def delete_event(id: int) -> Response:
-    event = Event.query.get_or_404(id)
+    event = db.session.get(Event, id)  # type: ignore[attr-defined]
+    if not event:
+        abort(404)
     if event.host:
         event.host.is_host = False
     db.session.delete(event)
@@ -139,7 +149,9 @@ def delete_event(id: int) -> Response:
 
 @api.route("/events/<int:id>/", methods=["PATCH"])
 def update_event(id: int) -> Response:
-    event = Event.query.get_or_404(id)
+    event = db.session.get(Event, id)  # type: ignore[attr-defined]
+    if not event:
+        abort(404)
     request_schema = EventRequestSchema()
     response_schema = EventResponseSchema()
     try:
@@ -159,7 +171,7 @@ def _update_event_host(event: Event, data: dict) -> None:
         if event.host and event.host.id != host_id:
             event.host.is_host = False
             event.participants.append(event.host)
-        new_host = Participant.query.get(host_id)
+        new_host = db.session.get(Participant, host_id)  # type: ignore[attr-defined]
         new_host.is_host = True
         if new_host in event.participants:
             event.participants.remove(new_host)
@@ -173,8 +185,9 @@ def _update_event_fields(event: Event, data: dict) -> None:
 def _update_event_participants(event: Event, data: dict) -> None:
     participants_ids = data.get("participants")
     if participants_ids and len(participants_ids):
-        new = Participant.query.filter(Participant.id.in_(participants_ids)).all()
-        event.participants = new
+        condition = Participant.id.in_(participants_ids)
+        participants = db.session.query(Participant).filter(condition).all()
+        event.participants = participants
     elif participants_ids is not None and not len(participants_ids):
         event.participants.clear()
     data.pop("participants", None)

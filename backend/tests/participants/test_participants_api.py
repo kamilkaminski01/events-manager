@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 
 from app.extensions import db
@@ -31,7 +33,7 @@ def test_create_participant(client, app):
         "events": [],
     }
     response = client.post(f"{api}/participants/", json=data)
-    assert response.status_code == 201
+    assert response.status_code == HTTPStatus.CREATED
     assert response.get_json() == expected_data
 
 
@@ -66,13 +68,13 @@ def test_create_participant(client, app):
 )
 def test_create_participant_with_incorrect_data(client, app, data):
     response = client.post(f"{api}/participants/", json=data)
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
 def test_list_participants_with_data(client, app):
     create_bulk_participants(app)
     response = client.get(f"{api}/participants/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert len(response.json) == 3
 
 
@@ -88,16 +90,21 @@ def test_get_participant(client, app):
     }
     create_participant(app)
     response = client.get(f"{api}/participants/1/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json == expected_data
+
+
+def test_get_non_existent_participant_returns_404(client, app):
+    response = client.get(f"{api}/participants/1/")
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_get_participant_returns_participated_event(client, app):
     create_event(app)
     create_participant(app)
     with app.app_context():
-        event = db.session.query(Event).get(1)
-        participant = db.session.query(Participant).get(2)
+        event = db.session.get(Event, 1)
+        participant = db.session.get(Participant, 2)
 
         assert len(event.participants) == 0
 
@@ -105,7 +112,7 @@ def test_get_participant_returns_participated_event(client, app):
 
         response = client.get(f"{api}/participants/2/")
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert event.participants == [participant]
         assert len(response.json["events"]) == 1
         assert response.json["events"][0]["id"] == event.id
@@ -130,20 +137,30 @@ def test_update_participant(client, app):
     }
     create_participant(app)
     response = client.patch(f"{api}/participants/1/", json=data)
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json == expected_data
+
+
+def test_update_non_existent_participant_returns_404(client, app):
+    response = client.patch(f"{api}/participants/1/")
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_delete_participant(client, app):
     create_participant(app)
     response = client.delete(f"{api}/participants/1/")
-    assert response.status_code == 204
+    assert response.status_code == HTTPStatus.NO_CONTENT
+
+
+def test_delete_non_existent_participant_returns_404(client, app):
+    response = client.delete(f"{api}/participants/1/")
+    assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 def test_deleting_participant_unsets_event_host(client, app):
     create_event(app)
     with app.app_context():
-        event = db.session.query(Event).get(1)
+        event = db.session.get(Event, 1)
         pre_delete_host = event.host
 
         assert pre_delete_host is not None
@@ -152,7 +169,7 @@ def test_deleting_participant_unsets_event_host(client, app):
         response = client.delete(f"{api}/participants/1/")
         post_delete_host = event.host
 
-        assert response.status_code == 204
+        assert response.status_code == HTTPStatus.NO_CONTENT
         assert post_delete_host is None
 
 
