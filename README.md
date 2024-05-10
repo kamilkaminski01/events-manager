@@ -31,7 +31,16 @@ docker compose build
 docker compose up
 ```
 
-#### Troubleshooting
+[`Makefile`](Makefile) contains common commands that can be used to
+build, run, and test the project. The most important commands include:
+- `build`: builds the project with Docker Compose.
+- `run`: runs the project with Docker Compose.
+- `lint`: performs backend static code checks.
+- `frontcheck`: performs frontend static code checks.
+- `test`: runs backend unit tests.
+- `clear`: stops the currently running services and removes the volumes.
+
+### Troubleshooting
 
 In case of errors with typing or missing dependencies, try to rebuild the
 Docker images:
