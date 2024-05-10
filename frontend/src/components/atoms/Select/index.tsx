@@ -13,26 +13,28 @@ const Select = ({
   const { register } = useFormContext()
 
   return (
-    <select
-      id={name}
-      data-testid={name}
-      defaultValue={defaultValue ? defaultValue : undefined}
-      className={classNames('select', {
-        'select__option--disabled': options.length === 0
-      })}
-      {...register(name)}>
-      {defaultOption && <option value={defaultOption.value}>{defaultOption.text}</option>}
-      {blankOption && <option>-</option>}
+    <>
       {options.length ? (
-        options.map((option, key) => (
-          <option value={option.value} key={key}>
-            {option.text}
-          </option>
-        ))
+        <select
+          id={name}
+          data-testid={name}
+          defaultValue={defaultValue ? defaultValue : undefined}
+          className={classNames('select', {
+            'select__option--disabled': options.length === 0
+          })}
+          {...register(name)}>
+          {defaultOption && <option value={defaultOption.value}>{defaultOption.text}</option>}
+          {blankOption && <option>-</option>}
+          {options.map((option, key) => (
+            <option value={option.value} key={key}>
+              {option.text}
+            </option>
+          ))}
+        </select>
       ) : (
-        <option className="select__option--disabled">No participants can be hosts</option>
+        <p className="no-options">No options available</p>
       )}
-    </select>
+    </>
   )
 }
 
