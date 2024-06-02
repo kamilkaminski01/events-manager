@@ -37,7 +37,9 @@ build, run, and test the project. The most important commands include:
 - `run`: runs the project with Docker Compose.
 - `lint`: performs backend static code checks.
 - `frontcheck`: performs frontend static code checks.
-- `test`: runs backend unit tests.
+- `test`: runs backend and frontend unit tests.
+- `pytest`: runs backend unit tests.
+- `vitest`: runs frontend unit tests.
 - `clear`: stops the currently running services and removes the volumes.
 
 ### Troubleshooting

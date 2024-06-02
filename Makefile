@@ -1,4 +1,4 @@
-.PHONY: build run recreate initial-data clear-data isort black flake8 mypy test lint frontcheck migrations migrate clear
+.PHONY: build run recreate initial-data clear-data isort black flake8 mypy test pytest vitest lint frontcheck migrations migrate clear
 
 build:
 	docker compose build
@@ -28,7 +28,14 @@ mypy:
 	docker compose run --rm web mypy .
 
 test:
-	docker-compose run --rm web pytest
+	docker compose run --rm web pytest
+	docker compose run --rm frontend npm run test
+
+pytest:
+	docker compose run --rm web pytest
+
+vitest:
+	docker compose run --rm frontend npm run test
 
 lint:
 	docker compose run --rm -T web isort .
