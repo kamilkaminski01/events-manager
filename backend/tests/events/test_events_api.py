@@ -15,6 +15,8 @@ def test_create_event(client, app):
     create_participant(app)
     data = {"name": "Test Event", "hostId": 1}
     expected_data = {
+        "id": 1,
+        "name": "Test Event",
         "host": {
             "id": 1,
             "firstName": "Adam",
@@ -24,8 +26,6 @@ def test_create_event(client, app):
             "chosenMeals": ["Breakfast", "Dinner", "Supper"],
             "events": [],
         },
-        "id": 1,
-        "name": "Test Event",
         "participants": [],
     }
     response = client.post(f"{api}/events/", json=data)
@@ -37,6 +37,8 @@ def test_creat_event_with_participant(client, app):
     create_bulk_participants(app)
     data = {"name": "Test Event", "hostId": 1, "participants": [2, 3]}
     expected_data = {
+        "id": 1,
+        "name": "Test Event",
         "host": {
             "id": 1,
             "firstName": "Kamil",
@@ -46,8 +48,6 @@ def test_creat_event_with_participant(client, app):
             "chosenMeals": ["Breakfast", "Dinner", "Supper"],
             "events": [],
         },
-        "id": 1,
-        "name": "Test Event",
         "participants": [
             {
                 "id": 2,
@@ -89,6 +89,8 @@ def test_create_event_with_incorrect_data(client, app, data):
 
 def test_get_event(client, app):
     expected_data = {
+        "id": 1,
+        "name": "Test Event",
         "host": {
             "id": 1,
             "firstName": "Tester",
@@ -98,8 +100,6 @@ def test_get_event(client, app):
             "chosenMeals": [],
             "events": [],
         },
-        "id": 1,
-        "name": "Test Event",
         "participants": [],
     }
     create_event(app)
@@ -121,6 +121,8 @@ def test_update_event(client, app):
         "hostId": 2,
     }
     expected_data = {
+        "id": 1,
+        "name": "Updated name",
         "host": {
             "id": 2,
             "firstName": "Adam",
@@ -130,8 +132,6 @@ def test_update_event(client, app):
             "chosenMeals": ["Breakfast", "Dinner", "Supper"],
             "events": [],
         },
-        "id": 1,
-        "name": "Updated name",
         "participants": [
             {
                 "id": 1,
