@@ -1,58 +1,77 @@
-.PHONY: build run recreate initial-data clear-data isort black flake8 mypy test pytest vitest lint frontcheck migrations migrate clear
+# Set the COMPOSE_FILE variable to the appropriate file based on the environment
+# without env for development
+# env=prod for production
+
+ifeq ($(env),prod)
+	COMPOSE_FILE=docker-compose-prod.yml
+else
+	COMPOSE_FILE=docker-compose.yml
+endif
+
+.PHONY: build run down recreate initial-data clear-data isort black flake8 mypy test pytest vitest lint check frontcheck migrations migrate clear
 
 build:
-	docker compose build
+	docker compose -f $(COMPOSE_FILE) build
 
 run:
-	docker compose up
+	docker compose -f $(COMPOSE_FILE) up $(if $(filter prod,$(env)),-d)
+
+down:
+	docker compose -f $(COMPOSE_FILE) down
 
 recreate:
-	docker compose up --build --force-recreate
+	docker compose -f $(COMPOSE_FILE) up --build --force-recreate $(if $(filter prod,$(env)),-d)
 
 initial-data:
-	docker compose run --rm web flask cmd initialize_data
+	docker compose -f $(COMPOSE_FILE) run --rm web flask cmd initialize_data
 
 clear-data:
-	docker compose run --rm web flask cmd clear_data
+	docker compose -f $(COMPOSE_FILE) run --rm web flask cmd clear_data
 
 isort:
-	docker compose run --rm web isort .
+	docker compose -f $(COMPOSE_FILE) run --rm web isort .
 
 black:
-	docker compose run --rm web black . --exclude="migrations/"
+	docker compose -f $(COMPOSE_FILE) run --rm web black . --exclude="migrations/"
 
 flake8:
-	docker compose run --rm web flake8 .
+	docker compose -f $(COMPOSE_FILE) run --rm web flake8 .
 
 mypy:
-	docker compose run --rm web mypy .
+	docker compose -f $(COMPOSE_FILE) run --rm web mypy .
 
 test:
-	docker compose run --rm web pytest
-	docker compose run --rm frontend npm run test
+	docker compose -f $(COMPOSE_FILE) run --rm web pytest
+	docker compose -f $(COMPOSE_FILE) run --rm frontend npm run test
 
 pytest:
-	docker compose run --rm web pytest
+	docker compose -f $(COMPOSE_FILE) run --rm web pytest
 
 vitest:
-	docker compose run --rm frontend npm run test
+	docker compose -f $(COMPOSE_FILE) run --rm frontend npm run test
 
 lint:
-	docker compose run --rm -T web isort .
-	docker compose run --rm -T web black .
-	docker compose run --rm -T web flake8 .
-	docker compose run --rm -T web mypy .
+	docker compose -f $(COMPOSE_FILE) run --rm -T web isort .
+	docker compose -f $(COMPOSE_FILE) run --rm -T web black .
+	docker compose -f $(COMPOSE_FILE) run --rm -T web flake8 .
+	docker compose -f $(COMPOSE_FILE) run --rm -T web mypy .
+
+check:
+	docker compose -f $(COMPOSE_FILE) run --rm web isort --check-only .
+	docker compose -f $(COMPOSE_FILE) run --rm web black --check .
+	docker compose -f $(COMPOSE_FILE) run --rm web flake8 .
+	docker compose -f $(COMPOSE_FILE) run --rm web mypy .
 
 frontcheck:
-	docker compose run --rm -T frontend npm run check
+	docker compose -f $(COMPOSE_FILE) run --rm -T frontend npm run check
 
 migrations:
-	docker compose run --rm web flask db migrate
+	docker compose -f $(COMPOSE_FILE) run --rm web flask db migrate
 
 migrate:
-	docker compose run --rm web flask db upgrade
+	docker compose -f $(COMPOSE_FILE) run --rm web flask db upgrade
 
 clear:
-	docker compose down -v
+	docker compose -f $(COMPOSE_FILE) down -v
 	docker system prune --force
 	docker volume prune --force
