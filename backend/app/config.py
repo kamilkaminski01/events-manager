@@ -6,6 +6,6 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-class TestConfig:
+class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite3"

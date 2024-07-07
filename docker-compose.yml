@@ -6,8 +6,8 @@ services:
       context: backend
       dockerfile: local.Dockerfile
     depends_on:
-        db:
-          condition: service_healthy
+      db:
+        condition: service_healthy
     ports:
       - "4000:4000"
     volumes:
@@ -25,10 +25,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     healthcheck:
-        test: sh -c "pg_isready -U postgres"
-        interval: 3s
-        timeout: 3s
-        retries: 5
+      test: sh -c "pg_isready -U postgres"
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   frontend:
     build:
