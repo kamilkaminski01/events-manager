@@ -6,16 +6,18 @@ import Button from 'components/atoms/Button'
 const Navbar = () => {
   return (
     <nav>
-      <Link className="nav__brand" to={PATHS.home}>
-        Events Manager
-      </Link>
-      <div className="nav__menu">
-        <Link className="nav__link" to={PATHS.event}>
-          <Button className="nav__btn btn--outline">Create Event</Button>
+      <div className="nav__items">
+        <Link className="nav__brand" to={PATHS.home}>
+          Events Manager
         </Link>
-        <Link className="nav__link" to={PATHS.participant}>
-          <Button className="nav__btn btn--outline">Register Participant</Button>
-        </Link>
+        <div className="nav__menu">
+          <Link className="nav__link" to={PATHS.event}>
+            <Button className="nav__btn btn--outline">Create Event</Button>
+          </Link>
+          <Link className="nav__link" to={PATHS.participant}>
+            <Button className="nav__btn btn--outline">Register Participant</Button>
+          </Link>
+        </div>
       </div>
     </nav>
   )

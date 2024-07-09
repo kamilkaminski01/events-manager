@@ -1,3 +1,21 @@
+@mixin for-desktop {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin for-tablet {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin for-phone {
+  @media (max-width: 500px) {
+    @content;
+  }
+}
+
 @mixin page {
   min-height: calc(100vh - ($navbar-height + $footer-height));
   display: flex;
@@ -9,10 +27,18 @@
 @mixin item-page {
   min-height: calc(100vh - ($navbar-height + $footer-height));
   display: flex;
+  align-items: center;
   flex-direction: column;
+
+  padding: $padding-to-navbar 1em 1.5em 1em;
   gap: 2em;
-  padding: $padding-to-navbar 4em 1.5em 4em;
+
   background-color: $alabaster;
+
+  & > *:not(.spinner) {
+    width: 100%;
+    max-width: 85rem;
+  }
 }
 
 @mixin item-page__no-data {
@@ -41,6 +67,10 @@
   width: 100%;
   max-width: 25rem;
   gap: 1em;
+
+  @include for-phone {
+    max-width: 20rem;
+  }
 }
 
 @mixin page-form__title {
@@ -58,7 +88,8 @@
     background-color: $alabaster;
   }
 
-  & > a, span:not(.actions) {
+  & > a,
+  span:not(.actions) {
     display: flex;
     justify-content: center;
     flex-direction: column;

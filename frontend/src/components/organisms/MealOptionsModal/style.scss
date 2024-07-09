@@ -2,4 +2,9 @@
   display: flex;
   justify-content: space-between;
   gap: 0.5em;
+
+  @include for-phone {
+    flex-direction: column;
+    gap: 1.5em;
+  }
 }

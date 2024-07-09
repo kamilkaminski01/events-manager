@@ -17,10 +17,18 @@
 
     &.participants > * {
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.5fr;
+
+      @include for-tablet {
+        grid-template-columns: repeat(5, minmax(128px, 1fr)) minmax(64px, 1fr);
+      }
     }
 
     &.events > * {
       grid-template-columns: 1fr 1fr 1fr 0.5fr;
+
+      @include for-tablet {
+        grid-template-columns: repeat(3, minmax(200px, 1fr)) minmax(100px, 1fr);
+      }
     }
 
     .table__header {
@@ -36,6 +44,10 @@
         white-space: nowrap;
         overflow: hidden;
       }
+    }
+
+    @include for-tablet {
+      overflow-x: scroll;
     }
   }
 

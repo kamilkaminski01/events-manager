@@ -4,6 +4,10 @@
   justify-content: space-between;
   gap: 1em;
   font-size: 1.1rem;
+
+  @include for-phone {
+    height: 3.3em;
+  }
 }
 
 .meal-types__modal-form {

@@ -3,6 +3,7 @@
   grid-template-columns: 13.5em 1fr auto;
 
   .settings-tile-record__label {
+    margin-right: 0.75rem;
     color: $devil;
     text-transform: capitalize;
   }
@@ -15,8 +16,10 @@
   .settings-tile-record__value {
     display: flex;
     flex-direction: column;
+    margin-right: 0.75rem;
 
     color: $carbon;
+    word-break: break-word;
 
     &.link {
       width: fit-content;
@@ -34,5 +37,9 @@
 
   & + .settings-tile-record {
     margin-top: 1em;
+  }
+
+  @media (max-width: 550px) {
+    grid-template-columns: 7em 1fr auto;
   }
 }
