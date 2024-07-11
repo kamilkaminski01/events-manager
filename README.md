@@ -82,13 +82,17 @@ to initialize the database with example data: <br />
 or <br/>
 cd into the `backend` directory and type `flask cmd initialize_data`
 
+### Authentication
+Logging in allows to create events, register participants and modify existing data.
+<br /> In order to login - create an admin user by running `make admin` or `flask
+cmd admin` in the `backend` directory. <br /> The credentials will be `admin:admin`
 
 ## Code quality standards
 ### Backend
 All backend code is formatted and verified by the `black`, `flake8`,
 `mypy` and `isort` tools. Their configurations can be found in the
-[.setup.cfg](backend/setup.cfg) file. Additionally, `pre-commit` [checks](.pre-commit-config.yaml)
-are performed in order to verify whitespaces, credentials, etc.
+[setup.cfg](backend/setup.cfg) file. Additionally, `pre-commit` [checks](.pre-commit-config.yaml)
+are performed to verify whitespaces, credentials, etc.
 
 Custom functions and methods use **type hints** to improve IDE code
 completions, prevent from type errors and extend code documentation.
@@ -109,3 +113,4 @@ and `eslint` tools.
 ![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo7.png)
 ![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo8.png)
 ![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo9.png)
+![demo](https://raw.githubusercontent.com/kamilkaminski01/events-manager/master/frontend/src/assets/images/demo/demo10.png)
