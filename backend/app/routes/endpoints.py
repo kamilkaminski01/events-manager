@@ -1,19 +1,51 @@
 from flask import Blueprint, Response, abort, jsonify, make_response, request
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+    jwt_required,
+)
 from marshmallow.exceptions import ValidationError
 
 from app.extensions import db
 from app.models.event import Event
 from app.models.participant import Participant
+from app.models.user import User
 
-from .responses import ResponseMessage
+from .responses import Responses
 from .schemas import (
     EventRequestSchema,
     EventResponseSchema,
+    LoginRequestSchema,
     ParticipantRequestSchema,
     ParticipantResponseSchema,
 )
 
 api = Blueprint("api", __name__, url_prefix="/api/v1")
+
+
+@api.route("/login/", methods=["POST"])
+def login() -> Response:
+    try:
+        schema = LoginRequestSchema()
+        data = schema.load(request.get_json())
+        username, password = data["username"], data["password"]
+        user = db.session.query(User).filter_by(username=username).first()
+        if not user or not user.check_password(password):
+            return make_response(jsonify(Responses.INVALID_CREDENTIALS), 401)
+        access_token = create_access_token(identity=user.id)
+        refresh_token = create_refresh_token(identity=user.id)
+    except ValidationError:
+        return make_response(jsonify(Responses.INVALID_DATA), 400)
+    return make_response(jsonify(access=access_token, refresh=refresh_token), 200)
+
+
+@api.route("/refresh/", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh() -> Response:
+    user_id = get_jwt_identity()
+    access_token = create_access_token(identity=user_id)
+    return make_response(jsonify(access=access_token), 200)
 
 
 @api.route("/participants/", methods=["GET"])
@@ -25,6 +57,7 @@ def list_participants() -> Response:
 
 
 @api.route("/participants/", methods=["POST"])
+@jwt_required()
 def create_participant() -> Response:
     request_schema = ParticipantRequestSchema()
     response_schema = ParticipantResponseSchema()
@@ -40,7 +73,7 @@ def create_participant() -> Response:
         db.session.add(participant)
         db.session.commit()
     except ValidationError:
-        return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
+        return make_response(jsonify(Responses.INVALID_DATA), 400)
     return make_response(jsonify(response_schema.dump(participant)), 201)
 
 
@@ -58,6 +91,7 @@ def get_participant(id: int) -> Response:
 
 
 @api.route("/participants/<int:id>/", methods=["PATCH"])
+@jwt_required()
 def update_participant(id: int) -> Response:
     participant = db.session.get(Participant, id)  # type: ignore[attr-defined]
     if not participant:
@@ -71,10 +105,11 @@ def update_participant(id: int) -> Response:
         db.session.commit()
         return make_response(jsonify(response_schema.dump(participant)), 200)
     except ValidationError:
-        return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
+        return make_response(jsonify(Responses.INVALID_DATA), 400)
 
 
 @api.route("/participants/<int:id>/", methods=["DELETE"])
+@jwt_required()
 def delete_participant(id: int) -> Response:
     participant = db.session.get(Participant, id)  # type: ignore[attr-defined]
     if not participant:
@@ -85,7 +120,7 @@ def delete_participant(id: int) -> Response:
             event.host = None
     db.session.delete(participant)
     db.session.commit()
-    return make_response(jsonify(ResponseMessage.DELETED), 204)
+    return make_response(jsonify(Responses.DELETED), 204)
 
 
 @api.route("/events/", methods=["GET"])
@@ -97,6 +132,7 @@ def list_events() -> Response:
 
 
 @api.route("/events/", methods=["POST"])
+@jwt_required()
 def create_event() -> Response:
     request_schema = EventRequestSchema()
     response_schema = EventResponseSchema()
@@ -108,7 +144,7 @@ def create_event() -> Response:
         db.session.add(event)
         db.session.commit()
     except ValidationError:
-        return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
+        return make_response(jsonify(Responses.INVALID_DATA), 400)
     return make_response(jsonify(response_schema.dump(event)), 201)
 
 
@@ -136,6 +172,7 @@ def get_event(id: int) -> Response:
 
 
 @api.route("/events/<int:id>/", methods=["DELETE"])
+@jwt_required()
 def delete_event(id: int) -> Response:
     event = db.session.get(Event, id)  # type: ignore[attr-defined]
     if not event:
@@ -144,10 +181,11 @@ def delete_event(id: int) -> Response:
         event.host.is_host = False
     db.session.delete(event)
     db.session.commit()
-    return make_response(jsonify(ResponseMessage.DELETED), 204)
+    return make_response(jsonify(Responses.DELETED), 204)
 
 
 @api.route("/events/<int:id>/", methods=["PATCH"])
+@jwt_required()
 def update_event(id: int) -> Response:
     event = db.session.get(Event, id)  # type: ignore[attr-defined]
     if not event:
@@ -163,7 +201,7 @@ def update_event(id: int) -> Response:
         response = response_schema.dump(event)
         return make_response(jsonify(response), 200)
     except ValidationError:
-        return make_response(jsonify(ResponseMessage.INVALID_DATA), 400)
+        return make_response(jsonify(Responses.INVALID_DATA), 400)
 
 
 def _update_event_host(event: Event, data: dict) -> None:

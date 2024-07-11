@@ -59,4 +59,4 @@ class Participant(db.Model):  # type: ignore
 
     @classmethod
     def default_sort(cls):
-        return cls.query.order_by(asc(cls.created_at))
+        return cls.query.order_by(asc(cls.created_at), asc(cls.id))

@@ -5,7 +5,7 @@ from app.cli.commands import cmd
 from app.routes.endpoints import api
 
 from .config import Config
-from .extensions import db, migrate
+from .extensions import db, jwt, migrate
 
 
 def create_app(config=Config):
@@ -16,6 +16,7 @@ def create_app(config=Config):
 
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
 
     app.register_blueprint(api)
     app.register_blueprint(cmd)

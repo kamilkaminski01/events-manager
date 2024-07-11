@@ -11,7 +11,7 @@ from tests.factories.participants import create_bulk_participants, create_partic
 api = "/api/v1"
 
 
-def test_create_event(client, app):
+def test_create_event(client, auth, app):
     create_participant(app)
     data = {"name": "Test Event", "hostId": 1}
     expected_data = {
@@ -28,12 +28,17 @@ def test_create_event(client, app):
         },
         "participants": [],
     }
-    response = client.post(f"{api}/events/", json=data)
+    response = client.post(f"{api}/events/", json=data, headers=auth)
     assert response.status_code == HTTPStatus.CREATED
     assert response.json == expected_data
 
 
-def test_creat_event_with_participant(client, app):
+def test_create_event_without_authentication(client):
+    response = client.post(f"{api}/events/", json={"test": "test"})
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+
+def test_creat_event_with_participant(client, auth, app):
     create_bulk_participants(app)
     data = {"name": "Test Event", "hostId": 1, "participants": [2, 3]}
     expected_data = {
@@ -69,7 +74,7 @@ def test_creat_event_with_participant(client, app):
             },
         ],
     }
-    response = client.post(f"{api}/events/", json=data)
+    response = client.post(f"{api}/events/", json=data, headers=auth)
     assert response.status_code == HTTPStatus.CREATED
     assert response.json == expected_data
 
@@ -82,8 +87,8 @@ def test_creat_event_with_participant(client, app):
         {"name": "Test", "hostId": None},
     ],
 )
-def test_create_event_with_incorrect_data(client, app, data):
-    response = client.post(f"{api}/events/", json=data)
+def test_create_event_with_incorrect_data(client, auth, app, data):
+    response = client.post(f"{api}/events/", json=data, headers=auth)
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
@@ -113,7 +118,7 @@ def test_get_non_existent_event_returns_404(client, app):
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_update_event(client, app):
+def test_update_event(client, auth, app):
     create_event(app)
     create_participant(app)
     data = {
@@ -144,17 +149,23 @@ def test_update_event(client, app):
             }
         ],
     }
-    response = client.patch(f"{api}/events/1/", json=data)
+    response = client.patch(f"{api}/events/1/", json=data, headers=auth)
     assert response.status_code == HTTPStatus.OK
     assert response.json == expected_data
 
 
-def test_update_non_existent_event_returns_404(client, app):
-    response = client.patch(f"{api}/events/1/")
+def test_update_event_without_authentication(client, app):
+    create_event(app)
+    response = client.patch(f"{api}/events/1/", json={"test": "test"})
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+
+def test_update_non_existent_event_returns_404(client, auth, app):
+    response = client.patch(f"{api}/events/1/", headers=auth)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_update_events_participants_from_0_to_2(client, app):
+def test_update_events_participants_from_0_to_2(client, auth, app):
     create_event(app)
     create_bulk_participants(app)
     data = {"participants": [2, 3]}
@@ -163,13 +174,13 @@ def test_update_events_participants_from_0_to_2(client, app):
 
         assert len(event.participants) == 0
 
-        response = client.patch(f"{api}/events/1/", json=data)
+        response = client.patch(f"{api}/events/1/", json=data, headers=auth)
 
         assert response.status_code == HTTPStatus.OK
         assert len(event.participants) == 2
 
 
-def test_update_events_participants_from_2_to_0(client, app):
+def test_update_events_participants_from_2_to_0(client, auth, app):
     create_event(app)
     create_bulk_participants(app)
     data = {"participants": []}
@@ -185,13 +196,13 @@ def test_update_events_participants_from_2_to_0(client, app):
         event.participants.extend(participants)
         assert len(event.participants) == 2
 
-        response = client.patch(f"{api}/events/1/", json=data)
+        response = client.patch(f"{api}/events/1/", json=data, headers=auth)
 
         assert response.status_code == HTTPStatus.OK
         assert len(event.participants) == 0
 
 
-def test_updating_event_host_add_him_to_its_participants(client, app):
+def test_updating_event_host_add_him_to_its_participants(client, auth, app):
     create_event(app)
     create_participant(app)
     data = {"hostId": 2}
@@ -202,7 +213,7 @@ def test_updating_event_host_add_him_to_its_participants(client, app):
         assert pre_update_host not in event.participants
         assert pre_update_host.id != 2
 
-        response = client.patch(f"{api}/events/1/", json=data)
+        response = client.patch(f"{api}/events/1/", json=data, headers=auth)
         post_update_host = event.host
 
         assert response.status_code == HTTPStatus.OK
@@ -210,18 +221,24 @@ def test_updating_event_host_add_him_to_its_participants(client, app):
         assert pre_update_host in event.participants
 
 
-def test_delete_event(client, app):
+def test_delete_event(client, auth, app):
     create_event(app)
-    response = client.delete(f"{api}/events/1/")
+    response = client.delete(f"{api}/events/1/", headers=auth)
     assert response.status_code == HTTPStatus.NO_CONTENT
 
 
-def test_delete_non_existent_event_returns_404(client, app):
+def test_delete_event_without_authentication(client, app):
+    create_event(app)
     response = client.delete(f"{api}/events/1/")
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+
+def test_delete_non_existent_event_returns_404(client, auth, app):
+    response = client.delete(f"{api}/events/1/", headers=auth)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_deleting_event_sets_host_is_host_field_false(client, app):
+def test_deleting_event_sets_host_is_host_field_false(client, auth, app):
     create_event(app)
     with app.app_context():
         pre_delete_event = db.session.get(Event, 1)
@@ -230,7 +247,7 @@ def test_deleting_event_sets_host_is_host_field_false(client, app):
         assert pre_delete_event is not None
         assert pre_delete_event.host == host
 
-        response = client.delete(f"{api}/events/1/")
+        response = client.delete(f"{api}/events/1/", headers=auth)
         post_delete_event = db.session.get(Event, 1)
 
         assert response.status_code == HTTPStatus.NO_CONTENT

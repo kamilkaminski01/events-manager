@@ -24,6 +24,11 @@ class CamelCaseSchema(Schema):
         field_obj.data_key = camelcase(field_obj.data_key or field_name)
 
 
+class LoginRequestSchema(CamelCaseSchema):
+    username = fields.Str(required=True)
+    password = fields.Str(required=True)
+
+
 class ParticipantRequestSchema(CamelCaseSchema):
     first_name = fields.Str()
     last_name = fields.Str()

@@ -1,8 +1,14 @@
+import logging
+
 from flask import Blueprint
+from sqlalchemy.exc import IntegrityError
 
 from app.extensions import db
 from app.models.event import Event
 from app.models.participant import Meal, Participant
+from app.models.user import User
+
+logger = logging.getLogger(__name__)
 
 cmd = Blueprint("cmd", __name__)
 
@@ -94,3 +100,13 @@ def clear_data():
         if table.fullname != "meals":
             db.session.execute(table.delete())
     db.session.commit()
+
+
+@cmd.cli.command("admin")
+def admin():
+    try:
+        user = User(username="admin", password="admin")
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError:
+        logger.info("Admin user already exists")

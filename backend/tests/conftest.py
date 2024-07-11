@@ -1,4 +1,5 @@
 import pytest
+from flask_jwt_extended import create_access_token
 from sqlalchemy.exc import IntegrityError
 
 from app import create_app, db
@@ -35,3 +36,10 @@ def app():
 @pytest.fixture()
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture()
+def auth(app):
+    with app.app_context():
+        access_token = create_access_token(identity="test")
+        return {"Authorization": f"Bearer {access_token}"}

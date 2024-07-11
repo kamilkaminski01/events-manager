@@ -8,7 +8,7 @@ else
 	COMPOSE_FILE=docker-compose.yml
 endif
 
-.PHONY: build run down recreate initial-data clear-data isort black flake8 mypy test pytest vitest lint check frontcheck migrations migrate clear
+.PHONY: build run down recreate admin initial-data clear-data isort black flake8 mypy test pytest vitest lint check frontcheck migrations migrate clear
 
 build:
 	docker compose -f $(COMPOSE_FILE) build
@@ -21,6 +21,9 @@ down:
 
 recreate:
 	docker compose -f $(COMPOSE_FILE) up --build --force-recreate $(if $(filter prod,$(env)),-d)
+
+admin:
+	docker compose -f $(COMPOSE_FILE) run --rm web flask cmd admin
 
 initial-data:
 	docker compose -f $(COMPOSE_FILE) run --rm web flask cmd initialize_data

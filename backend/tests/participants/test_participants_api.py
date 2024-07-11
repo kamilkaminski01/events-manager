@@ -15,7 +15,7 @@ from tests.factories.participants import (
 api = "/api/v1"
 
 
-def test_create_participant(client, app):
+def test_create_participant(client, auth, app):
     data = {
         "firstName": "Kamil",
         "lastName": "Kaminski",
@@ -32,9 +32,14 @@ def test_create_participant(client, app):
         "chosenMeals": ["Breakfast", "Dinner", "Supper"],
         "events": [],
     }
-    response = client.post(f"{api}/participants/", json=data)
+    response = client.post(f"{api}/participants/", json=data, headers=auth)
     assert response.status_code == HTTPStatus.CREATED
     assert response.get_json() == expected_data
+
+
+def test_create_participant_without_authentication(client):
+    response = client.post(f"{api}/participants/", json={"test": "test"})
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
 @pytest.mark.parametrize(
@@ -66,8 +71,8 @@ def test_create_participant(client, app):
         },
     ],
 )
-def test_create_participant_with_incorrect_data(client, app, data):
-    response = client.post(f"{api}/participants/", json=data)
+def test_create_participant_with_incorrect_data(client, auth, app, data):
+    response = client.post(f"{api}/participants/", json=data, headers=auth)
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
@@ -118,7 +123,7 @@ def test_get_participant_returns_participated_event(client, app):
         assert response.json["events"][0]["id"] == event.id
 
 
-def test_update_participant(client, app):
+def test_update_participant(client, auth, app):
     data = {
         "firstName": "Updated First Name",
         "lastName": "Updated Last Name",
@@ -136,28 +141,40 @@ def test_update_participant(client, app):
         "events": [],
     }
     create_participant(app)
-    response = client.patch(f"{api}/participants/1/", json=data)
+    response = client.patch(f"{api}/participants/1/", json=data, headers=auth)
     assert response.status_code == HTTPStatus.OK
     assert response.json == expected_data
 
 
-def test_update_non_existent_participant_returns_404(client, app):
+def test_update_participant_without_authentication(client, app):
+    create_participant(app)
     response = client.patch(f"{api}/participants/1/")
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+
+def test_update_non_existent_participant_returns_404(client, auth, app):
+    response = client.patch(f"{api}/participants/1/", headers=auth)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_delete_participant(client, app):
+def test_delete_participant(client, auth, app):
     create_participant(app)
-    response = client.delete(f"{api}/participants/1/")
+    response = client.delete(f"{api}/participants/1/", headers=auth)
     assert response.status_code == HTTPStatus.NO_CONTENT
 
 
-def test_delete_non_existent_participant_returns_404(client, app):
+def test_delete_participant_without_authentication(client, app):
+    create_participant(app)
     response = client.delete(f"{api}/participants/1/")
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+
+def test_delete_non_existent_participant_returns_404(client, auth, app):
+    response = client.delete(f"{api}/participants/1/", headers=auth)
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
-def test_deleting_participant_unsets_event_host(client, app):
+def test_deleting_participant_unsets_event_host(client, auth, app):
     create_event(app)
     with app.app_context():
         event = db.session.get(Event, 1)
@@ -166,7 +183,7 @@ def test_deleting_participant_unsets_event_host(client, app):
         assert pre_delete_host is not None
         assert event.host == pre_delete_host
 
-        response = client.delete(f"{api}/participants/1/")
+        response = client.delete(f"{api}/participants/1/", headers=auth)
         post_delete_host = event.host
 
         assert response.status_code == HTTPStatus.NO_CONTENT
