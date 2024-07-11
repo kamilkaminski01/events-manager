@@ -5,6 +5,7 @@ export const API_URL =
 
 export const PATHS = {
   home: '/',
+  login: '/login',
   homeWithEvents: '/#events',
   participant: '/participant',
   participantDetails: '/participant/:id',
@@ -13,8 +14,15 @@ export const PATHS = {
 }
 
 export const ENDPOINTS = {
+  login: 'login/',
+  refreshToken: 'refresh/',
   participants: 'participants/',
   participantDetails: 'participants/:id/',
   events: 'events/',
   eventDetails: 'events/:id/'
+}
+
+export const LOCAL_STORAGE = {
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken'
 }

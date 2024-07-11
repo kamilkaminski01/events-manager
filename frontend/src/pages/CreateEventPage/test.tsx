@@ -90,7 +90,7 @@ describe('CreateEventPage', () => {
     await userEvent.click(addParticipantsButton)
 
     await waitFor(() => {
-      const modalTitle = screen.getByText('Select participants')
+      const modalTitle = screen.getByText('Participants')
       expect(modalTitle).toBeVisible()
     })
   })

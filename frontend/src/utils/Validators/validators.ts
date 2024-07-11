@@ -8,6 +8,10 @@ export const valid = {
       /^[a-zA-Z\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff\u0100-\u0148\u014a-\u017f]{1}[a-zA-Z\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff\u0100-\u0148\u014a-\u017f ,.'-]{0,28}[a-zA-Z\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff\u0100-\u0148\u014a-\u017f.]{1}$/,
     message: 'Incorrect format'
   },
+  usernamePattern: {
+    value: /^[a-zA-Z0-9\s]+$/,
+    message: 'Username must contain only letters, numbers and be separated by spaces'
+  },
   eventNamePattern: {
     value: /^[a-zA-Z0-9\s]+$/,
     message: 'Name must contain only letters, numbers and be separated by spaces'

@@ -4,11 +4,11 @@
   .event__participants {
     cursor: pointer;
 
-    &.event__participants--populated {
+    &.event__participants--dark {
       color: $lazur;
     }
 
-    &.event__participants--empty {
+    &.event__participants--light {
       color: $primary-color;
     }
   }

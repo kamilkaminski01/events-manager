@@ -7,18 +7,21 @@ import ScrollToTop from 'components/atoms/ScrollToTop'
 import ParticipantsProvider from 'providers/participants'
 import ModalsProvider from 'providers/modals'
 import EventsProvider from 'providers/events'
+import AuthProvider from 'providers/auth'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <ScrollToTop>
-        <ParticipantsProvider>
-          <EventsProvider>
-            <ModalsProvider>
-              <App />
-            </ModalsProvider>
-          </EventsProvider>
-        </ParticipantsProvider>
+        <AuthProvider>
+          <ParticipantsProvider>
+            <EventsProvider>
+              <ModalsProvider>
+                <App />
+              </ModalsProvider>
+            </EventsProvider>
+          </ParticipantsProvider>
+        </AuthProvider>
       </ScrollToTop>
     </BrowserRouter>
   </React.StrictMode>

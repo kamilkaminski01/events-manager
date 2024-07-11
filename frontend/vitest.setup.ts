@@ -5,18 +5,6 @@ import { afterEach, beforeEach, vi } from 'vitest'
 const mockParticipantsData = [
   {
     id: 1,
-    firstName: 'Kamil',
-    lastName: 'Kaminski',
-    isHost: true,
-    mealPreference: 'Carnivorous',
-    chosenMeals: ['Breakfast', 'Supper'],
-    events: [
-      { id: 2, name: 'Sun Rock Festival' },
-      { id: 4, name: 'Q3 Meetup' }
-    ]
-  },
-  {
-    id: 2,
     firstName: 'James',
     lastName: 'William',
     isHost: true,
@@ -25,16 +13,7 @@ const mockParticipantsData = [
     events: []
   },
   {
-    id: 4,
-    firstName: 'Lucas',
-    lastName: 'Davis',
-    isHost: true,
-    mealPreference: 'Carnivorous',
-    chosenMeals: ['Breakfast'],
-    events: [{ id: 3, name: 'Dubai Vacation' }]
-  },
-  {
-    id: 5,
+    id: 2,
     firstName: 'Maciej',
     lastName: 'Brown',
     isHost: false,

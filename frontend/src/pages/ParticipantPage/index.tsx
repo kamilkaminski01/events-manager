@@ -1,15 +1,17 @@
 import './style.scss'
 import useParticipant from 'hooks/useParticipant'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import ParticipantDataTile from 'components/organisms/ParticipantDataTile'
 import Spinner from 'components/atoms/Spinner'
 import DeletionTile from 'components/organisms/DeletionTile'
 import ParticipantEventsTile from 'components/molecules/ParticipantEventsTile'
+import { AuthContext } from 'providers/auth/context'
 
 const ParticipantPage = () => {
   const { participant, getParticipant, isError } = useParticipant()
   const { id } = useParams()
+  const { isLogged } = useContext(AuthContext)
 
   useEffect(() => {
     if (id) {
@@ -24,7 +26,7 @@ const ParticipantPage = () => {
           <ParticipantDataTile participant={participant} getParticipant={getParticipant} />
           <ParticipantEventsTile participant={participant} hosted />
           <ParticipantEventsTile participant={participant} />
-          <DeletionTile itemType="participant" item={participant} />
+          {isLogged && <DeletionTile itemType="participant" item={participant} />}
         </>
       ) : isError ? (
         <div className="participant__no-data">

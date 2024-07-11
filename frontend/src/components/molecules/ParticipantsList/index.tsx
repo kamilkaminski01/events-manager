@@ -10,8 +10,11 @@ import ParticipantEdition from './partials/modals/ParticipantEdition'
 import useParticipant from 'hooks/useParticipant'
 import { ENDPOINTS, PATHS } from 'utils/consts'
 import { generatePath, Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthContext } from 'providers/auth/context'
 
 const ParticipantsList = ({ participants }: ParticipantsListProps) => {
+  const { isLogged } = useContext(AuthContext)
   const { openModal, closeModal } = useModals()
   const { deleteParticipant } = useParticipant()
 
@@ -48,36 +51,38 @@ const ParticipantsList = ({ participants }: ParticipantsListProps) => {
                 : '-'}
             </>
           </span>
-          <span className="actions">
-            <img
-              src={EditIcon}
-              alt="Edit"
-              onClick={() =>
-                openModal(
-                  <ParticipantEdition
-                    id={participant.id}
-                    firstName={participant.firstName}
-                    lastName={participant.lastName}
-                    chosenMealPreference={participant.mealPreference}
-                    chosenMeals={participant.chosenMeals}
-                  />
-                )
-              }
-            />
-            <img
-              src={DeleteIcon}
-              alt="Delete"
-              onClick={() =>
-                openModal(
-                  <DeletionModal
-                    title="Participant"
-                    deleteName={`${participant.firstName} ${participant.lastName}`}
-                    onSubmit={() => onDeleteSubmit(participant.id)}
-                  />
-                )
-              }
-            />
-          </span>
+          {isLogged && (
+            <span className="actions">
+              <img
+                src={EditIcon}
+                alt="Edit"
+                onClick={() =>
+                  openModal(
+                    <ParticipantEdition
+                      id={participant.id}
+                      firstName={participant.firstName}
+                      lastName={participant.lastName}
+                      chosenMealPreference={participant.mealPreference}
+                      chosenMeals={participant.chosenMeals}
+                    />
+                  )
+                }
+              />
+              <img
+                src={DeleteIcon}
+                alt="Delete"
+                onClick={() =>
+                  openModal(
+                    <DeletionModal
+                      title="Participant"
+                      deleteName={`${participant.firstName} ${participant.lastName}`}
+                      onSubmit={() => onDeleteSubmit(participant.id)}
+                    />
+                  )
+                }
+              />
+            </span>
+          )}
         </div>
       ))}
     </>

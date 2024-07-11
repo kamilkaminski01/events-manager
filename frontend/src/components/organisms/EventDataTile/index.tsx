@@ -11,6 +11,8 @@ import { filterEventsParticipantsIds, filterParticipantsIds } from 'utils/filter
 import ParticipantsModal from 'components/molecules/ParticipantsModal'
 import { FieldValues } from 'react-hook-form'
 import useEvent from 'hooks/useEvent'
+import { generatePath } from 'react-router-dom'
+import { PATHS } from 'utils/consts'
 
 const EventDataTile = ({ event, getEvent }: EventDataTileProps) => {
   const { participantsData } = useContext(ParticipantsContext)
@@ -44,6 +46,14 @@ const EventDataTile = ({ event, getEvent }: EventDataTileProps) => {
       />
       <SettingsTileRecord
         label="Host"
+        link={
+          event.host
+            ? {
+                to: generatePath(PATHS.participantDetails, { id: event.host.id }),
+                text: `${event.host.firstName} ${event.host.lastName}`
+              }
+            : undefined
+        }
         value={event.host ? `${event.host.firstName} ${event.host.lastName}` : '-'}
         button={{
           text: 'Update',

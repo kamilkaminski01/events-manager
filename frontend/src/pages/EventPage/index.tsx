@@ -1,14 +1,16 @@
 import './style.scss'
 import useEvent from 'hooks/useEvent'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Spinner from 'components/atoms/Spinner'
 import EventDataTile from 'components/organisms/EventDataTile'
 import DeletionTile from 'components/organisms/DeletionTile'
+import { AuthContext } from 'providers/auth/context'
 
 const EventPage = () => {
   const { event, getEvent, isError } = useEvent()
   const { id } = useParams()
+  const { isLogged } = useContext(AuthContext)
 
   useEffect(() => {
     if (id) {
@@ -21,7 +23,7 @@ const EventPage = () => {
       {event ? (
         <>
           <EventDataTile event={event} getEvent={getEvent} />
-          <DeletionTile itemType="event" item={event} />
+          {isLogged && <DeletionTile itemType="event" item={event} />}
         </>
       ) : isError ? (
         <div className="event__no-data">

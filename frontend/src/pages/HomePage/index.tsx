@@ -5,8 +5,11 @@ import { EHomePageContentType } from 'models/homePageContentType'
 import { useContext, useEffect, useState } from 'react'
 import { ParticipantsContext } from 'providers/participants/context'
 import { EventsContext } from 'providers/events/context'
+import classNames from 'classnames'
+import { AuthContext } from 'providers/auth/context'
 
 const HomePage = () => {
+  const { isLogged } = useContext(AuthContext)
   const { participantsData, isError: participantsError } = useContext(ParticipantsContext)
   const { eventsData, isError: eventsError } = useContext(EventsContext)
   const [visibleContent, setVisibleContent] = useState(EHomePageContentType.Participants)
@@ -31,7 +34,7 @@ const HomePage = () => {
   }
 
   return (
-    <main className="home-page">
+    <main className={classNames('home-page', { logged: isLogged })}>
       <div className="home-page__menu">
         <ContentSwitcherButton
           onClick={onParticipantsSwitch}

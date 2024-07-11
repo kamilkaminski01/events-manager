@@ -15,4 +15,10 @@
     width: 100%;
     max-width: 85rem;
   }
+
+  @include for-large-phone {
+    &.logged {
+      min-height: calc(100vh - ($mobile-navbar-height + $footer-height));
+    }
+  }
 }

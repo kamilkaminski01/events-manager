@@ -14,8 +14,10 @@ import { ParticipantsContext } from 'providers/participants/context'
 import { FieldValues } from 'react-hook-form'
 import { filterParticipantsIds, filterEventsParticipantsIds } from 'utils/filterParticipantsIds'
 import { generatePath, Link } from 'react-router-dom'
+import { AuthContext } from 'providers/auth/context'
 
 const EventsList = ({ events }: EventsListProps) => {
+  const { isLogged } = useContext(AuthContext)
   const { participantsData } = useContext(ParticipantsContext)
   const { openModal, closeModal } = useModals()
   const { updateEvent, deleteEvent } = useEvent()
@@ -54,8 +56,8 @@ const EventsList = ({ events }: EventsListProps) => {
           </>
           <span
             className={classNames('event__participants', {
-              'event__participants--populated': event.participants.length > 0,
-              'event__participants--empty': event.participants.length === 0
+              'event__participants--dark': event.participants.length > 0 || !isLogged,
+              'event__participants--light': event.participants.length === 0 && isLogged
             })}
             onClick={() => {
               const handleSubmit = (data: FieldValues) => {
@@ -71,30 +73,32 @@ const EventsList = ({ events }: EventsListProps) => {
                 />
               )
             }}>
-            {event.participants.length ? 'Show participants' : 'Add participants'}
+            {!event.participants.length && isLogged ? 'Add participants' : 'Show participants'}
           </span>
-          <span className="actions">
-            <img
-              src={EditIcon}
-              alt="Edit"
-              onClick={() =>
-                openModal(<EventEdition id={event.id} name={event.name} host={event.host} />)
-              }
-            />
-            <img
-              src={DeleteIcon}
-              alt="Delete"
-              onClick={() =>
-                openModal(
-                  <DeletionModal
-                    title="Event"
-                    deleteName={event.name}
-                    onSubmit={() => onDeleteSubmit(event.id)}
-                  />
-                )
-              }
-            />
-          </span>
+          {isLogged && (
+            <span className="actions">
+              <img
+                src={EditIcon}
+                alt="Edit"
+                onClick={() =>
+                  openModal(<EventEdition id={event.id} name={event.name} host={event.host} />)
+                }
+              />
+              <img
+                src={DeleteIcon}
+                alt="Delete"
+                onClick={() =>
+                  openModal(
+                    <DeletionModal
+                      title="Event"
+                      deleteName={event.name}
+                      onSubmit={() => onDeleteSubmit(event.id)}
+                    />
+                  )
+                }
+              />
+            </span>
+          )}
         </div>
       ))}
     </>

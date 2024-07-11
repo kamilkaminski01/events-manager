@@ -1,6 +1,7 @@
 import { IServerResponse } from 'models/serverResponse'
 import { useCallback, useState } from 'react'
 import axiosDefault from 'setup/axios/defaultInstance'
+import axiosAuth from 'setup/axios/authInstance'
 import { parseApiErrors } from 'utils/parseApiErrors'
 import { generatePath } from 'react-router-dom'
 
@@ -20,7 +21,7 @@ const useData = <T, R = T, C = T>(endpoint: string, { ...options }: useDataOptio
         setIsError(false)
 
         const path = id ? endpoint + `${id}/` : endpoint
-        const response = await axiosDefault.get(path)
+        const response = await axiosAuth.get(path)
 
         const responseData = response.data
         setData(responseData)

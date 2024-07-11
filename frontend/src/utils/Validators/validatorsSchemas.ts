@@ -10,5 +10,10 @@ export const validSchemas = {
     pattern: valid.eventNamePattern,
     minLength: valid.minLength(2),
     maxLength: valid.maxLength(35)
+  },
+  username: {
+    pattern: valid.usernamePattern,
+    minLength: valid.minLength(2),
+    maxLength: valid.maxLength(35)
   }
 }

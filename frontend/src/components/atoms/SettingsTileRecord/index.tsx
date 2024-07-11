@@ -2,8 +2,12 @@ import { SettingsTileRecordProps } from './interface'
 import './style.scss'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
+import { useContext } from 'react'
+import { AuthContext } from 'providers/auth/context'
 
 const SettingsTileRecord = ({ label, value, link, button, className }: SettingsTileRecordProps) => {
+  const { isLogged } = useContext(AuthContext)
+
   const renderValue = () => {
     if (!value || (typeof value !== 'number' && value.length === 0)) {
       return <span>-</span>
@@ -24,7 +28,7 @@ const SettingsTileRecord = ({ label, value, link, button, className }: SettingsT
         </Link>
       )}
 
-      {button && (
+      {button && isLogged && (
         <span className="settings-tile-record__btn" onClick={button.onClick}>
           {button.text}
         </span>
