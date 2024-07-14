@@ -1,5 +1,7 @@
+import sentry_sdk
 from flask import Flask
 from flask_cors import CORS
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from app.cli.commands import cmd
 from app.routes.endpoints import api
@@ -17,6 +19,14 @@ def create_app(config=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+
+    if config.SENTRY_DSN:
+        sentry_sdk.init(
+            dsn=config.SENTRY_DSN,
+            integrations=[FlaskIntegration()],
+            traces_sample_rate=0.01,
+            send_default_pii=True,
+        )
 
     app.register_blueprint(api)
     app.register_blueprint(cmd)

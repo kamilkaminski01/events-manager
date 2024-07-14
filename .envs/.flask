@@ -3,3 +3,4 @@
 SECRET_KEY=secret
 JWT_SECRET_KEY=secret
 DATABASE_URI=postgresql://postgres:postgres@db:5432/postgres
+SENTRY_DSN=
