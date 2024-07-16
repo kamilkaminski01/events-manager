@@ -4,6 +4,10 @@ stages:
   - build
   - deploy
 
+image: docker:latest
+services:
+  - docker:dind
+
 prepare-job:
   stage: prepare
   script:
