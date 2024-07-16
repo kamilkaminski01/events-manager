@@ -20,13 +20,17 @@ build:
   image: docker:27.0
   services:
     - docker:27-dind
+  variables:
+    IMAGE_REPO: $REGISTRY_USER/$REGISTRY_REPO
+  before_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+    - docker build -t $IMAGE_REPO:backend backend
+    - docker build -t $IMAGE_REPO:frontend frontend
+    - docker push $IMAGE_REPO
 
 deploy:
   stage: deploy
   script:
     - echo "Deploying application..."
     - echo "Application successfully deployed."
-  when: manual
