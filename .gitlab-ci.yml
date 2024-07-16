@@ -1,40 +1,26 @@
 stages:
-  - prepare
   - test
   - build
   - deploy
 
-prepare-job:
-  stage: prepare
-  script:
-    - apt-get update && apt-get install -y make
-  artifacts:
-    paths:
-      - /usr/bin/make
-
-unit-test-job:
+linit-and-test:
   stage: test
   image: docker:latest
-  dependencies:
-    - prepare-job
-  script:
-    - make test
-
-lint-test-job:
-  stage: test
-  image: docker:latest
-  dependencies:
-    - prepare-job
+  services:
+    - docker:dind
+  before_script:
+    - apt-get update && apt-get install make
   script:
     - make check
+    - make test
 
-build-job:
+build:
   stage: build
   script:
     - echo "Compiling the code..."
     - echo "Compile complete."
 
-deploy-job:
+deploy:
   stage: deploy
   script:
     - echo "Deploying application..."
