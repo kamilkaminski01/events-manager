@@ -1,25 +1,36 @@
 stages:
-  - build
+  - prepare
   - test
+  - build
   - deploy
+
+prepare-job:
+  stage: prepare
+  script:
+    - apt-get update && apt-get install -y make
+  artifacts:
+    paths:
+      - /usr/bin/make
+
+unit-test-job:
+  stage: test
+  dependencies:
+    - prepare-job
+  script:
+    - make test
+
+lint-test-job:
+  stage: test
+  dependencies:
+    - prepare-job
+  script:
+    - make check
 
 build-job:
   stage: build
   script:
     - echo "Compiling the code..."
     - echo "Compile complete."
-
-unit-test-job:
-  stage: test
-  script:
-    - echo "Running unit tests..."
-    - echo "Unit tests complete."
-
-lint-test-job:
-  stage: test
-  script:
-    - echo "Linting code..."
-    - echo "No lint issues found."
 
 deploy-job:
   stage: deploy
