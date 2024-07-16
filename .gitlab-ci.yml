@@ -9,7 +9,7 @@ linit-and-test:
   services:
     - docker:dind
   before_script:
-    - apt-get update && apt-get install make
+    - apk update && apk add make
   script:
     - make check
     - make test
