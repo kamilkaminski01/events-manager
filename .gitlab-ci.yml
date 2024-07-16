@@ -3,19 +3,23 @@ stages:
   - build
   - deploy
 
-linit-and-test:
+test-with-linters:
   stage: test
-  image: docker:latest
+  image: docker:27.0
   services:
-    - docker:dind
+    - docker:27-dind
   before_script:
     - apk update && apk add make
+    - make build
   script:
     - make check
     - make test
 
 build:
   stage: build
+  image: docker:27.0
+  services:
+    - docker:27-dind
   script:
     - echo "Compiling the code..."
     - echo "Compile complete."
@@ -25,3 +29,4 @@ deploy:
   script:
     - echo "Deploying application..."
     - echo "Application successfully deployed."
+  when: manual
