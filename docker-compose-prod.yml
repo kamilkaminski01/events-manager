@@ -30,7 +30,7 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "82:80"
     depends_on:
       web:
         condition: service_started
