@@ -4,10 +4,6 @@ stages:
   - build
   - deploy
 
-image: docker:latest
-services:
-  - docker:dind
-
 prepare-job:
   stage: prepare
   script:
@@ -18,6 +14,7 @@ prepare-job:
 
 unit-test-job:
   stage: test
+  image: docker:latest
   dependencies:
     - prepare-job
   script:
@@ -25,6 +22,7 @@ unit-test-job:
 
 lint-test-job:
   stage: test
+  image: docker:latest
   dependencies:
     - prepare-job
   script:
