@@ -27,7 +27,10 @@ build:
   script:
     - docker build -t $IMAGE_REPO:backend backend
     - docker build -t $IMAGE_REPO:frontend frontend
-    - docker push $IMAGE_REPO
+    - docker push $IMAGE_REPO:backend
+    - docker push $IMAGE_REPO:frontend
+  after_script:
+    - docker logout
 
 deploy:
   stage: deploy
