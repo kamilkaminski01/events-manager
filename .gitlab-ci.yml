@@ -3,6 +3,9 @@ stages:
   - build
   - deploy
 
+variables:
+  IMAGES_REPO: $REGISTRY_USER/$PROJECT
+
 test-with-linters:
   stage: test
   image: docker:27.0
@@ -20,20 +23,22 @@ build:
   image: docker:27.0
   services:
     - docker:27-dind
-  variables:
-    IMAGE_REPO: $REGISTRY_USER/$REGISTRY_REPO
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
   script:
-    - docker build -t $IMAGE_REPO:backend backend
-    - docker build -t $IMAGE_REPO:frontend frontend
-    - docker push $IMAGE_REPO:backend
-    - docker push $IMAGE_REPO:frontend
+    - docker build -t $IMAGES_REPO:backend backend
+    - docker build -t $IMAGES_REPO:frontend frontend
+    - docker push $IMAGES_REPO:backend
+    - docker push $IMAGES_REPO:frontend
   after_script:
     - docker logout
 
 deploy:
   stage: deploy
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SERVER_ROOT "
+      cd $PROJECT/ &&
+      docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD &&
+      make down env=prod &&
+      docker images -q IMAGES_REPO | xargs docker rmi &&
+      make run env=prod"
