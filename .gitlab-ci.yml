@@ -35,12 +35,10 @@ build:
 
 deploy:
   stage: deploy
-  before_script:
-    - chmod 400 $SSH_KEY
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$SSH_HOST -p $SSH_PORT "
       cd $PROJECT/ &&
       docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD &&
       make down env=prod &&
-      docker images -q IMAGES_REPO | xargs docker rmi &&
+      docker images -q $IMAGES_REPO | xargs -r docker rmi &&
       make run env=prod"
