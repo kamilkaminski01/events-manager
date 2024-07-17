@@ -36,7 +36,7 @@ build:
 deploy:
   stage: deploy
   script:
-    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$SSH_HOST "
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$SSH_HOST -p $SSH_PORT "
       cd $PROJECT/ &&
       docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD &&
       make down env=prod &&
