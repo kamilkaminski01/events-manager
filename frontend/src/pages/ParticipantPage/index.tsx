@@ -7,6 +7,7 @@ import Spinner from 'components/atoms/Spinner'
 import DeletionTile from 'components/organisms/DeletionTile'
 import ParticipantEventsTile from 'components/molecules/ParticipantEventsTile'
 import { AuthContext } from 'providers/auth/context'
+import Meta from 'components/atoms/Meta'
 
 const ParticipantPage = () => {
   const { participant, getParticipant, isError } = useParticipant()
@@ -21,6 +22,9 @@ const ParticipantPage = () => {
 
   return (
     <main className="participant-page">
+      <Meta>
+        <meta name="robots" content="noindex" />
+      </Meta>
       {participant ? (
         <>
           <ParticipantDataTile participant={participant} getParticipant={getParticipant} />

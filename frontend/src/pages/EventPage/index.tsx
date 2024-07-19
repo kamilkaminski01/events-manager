@@ -6,6 +6,7 @@ import Spinner from 'components/atoms/Spinner'
 import EventDataTile from 'components/organisms/EventDataTile'
 import DeletionTile from 'components/organisms/DeletionTile'
 import { AuthContext } from 'providers/auth/context'
+import Meta from 'components/atoms/Meta'
 
 const EventPage = () => {
   const { event, getEvent, isError } = useEvent()
@@ -20,6 +21,9 @@ const EventPage = () => {
 
   return (
     <main className="event-page">
+      <Meta>
+        <meta name="robots" content="noindex" />
+      </Meta>
       {event ? (
         <>
           <EventDataTile event={event} getEvent={getEvent} />
