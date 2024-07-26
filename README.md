@@ -1,3 +1,6 @@
+<div align="center">
+  <img alt="Logo" src="https://raw.githubusercontent.com/kamilkaminski01/events-manager/main/frontend/public/favicon-512x512.png" width="100" />
+</div>
 <h1 align="center">Events Manager</h1>
 
 This project allows to create events, participants and add participants to the
