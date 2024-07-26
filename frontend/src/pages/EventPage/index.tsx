@@ -23,6 +23,11 @@ const EventPage = () => {
     <main className="event-page">
       <Meta>
         <meta name="robots" content="noindex" />
+        {event ? (
+          <title>{`${event.name} | Events Manager`}</title>
+        ) : (
+          <title>{'Event not found'}</title>
+        )}
       </Meta>
       {event ? (
         <>

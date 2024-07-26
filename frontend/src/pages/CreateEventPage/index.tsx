@@ -14,6 +14,7 @@ import useEvent from 'hooks/useEvent'
 import { useNavigate } from 'react-router-dom'
 import ParticipantsModal from 'components/molecules/ParticipantsModal'
 import { ModalsContext } from 'providers/modals/context'
+import Meta from 'components/atoms/Meta'
 
 const CreateEventPage = () => {
   const { participantsData } = useContext(ParticipantsContext)
@@ -41,6 +42,9 @@ const CreateEventPage = () => {
 
   return (
     <main className="create-event-page">
+      <Meta>
+        <title>{'Events Manager'}</title>
+      </Meta>
       <FormProvider {...methods}>
         <form className="create-event-form" id={formID} onSubmit={methods.handleSubmit(onSubmit)}>
           <h1 className="create-event-form__title">Create an event</h1>

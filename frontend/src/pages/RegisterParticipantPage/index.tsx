@@ -12,6 +12,7 @@ import { useModals } from 'providers/modals/context'
 import MealOptionsModal from 'components/organisms/MealOptionsModal'
 import { useState } from 'react'
 import { IMealOptions } from 'models/mealOptions'
+import Meta from 'components/atoms/Meta'
 
 const RegisterParticipantPage = () => {
   const methods = useForm()
@@ -45,6 +46,9 @@ const RegisterParticipantPage = () => {
 
   return (
     <main className="register-participant-page">
+      <Meta>
+        <title>{'Events Manager'}</title>
+      </Meta>
       <FormProvider {...methods}>
         <form
           className="register-participant-form"

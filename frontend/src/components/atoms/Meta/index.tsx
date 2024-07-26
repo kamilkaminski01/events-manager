@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { MetaProps } from './interface'
 
 const Meta = ({ children }: MetaProps) => {

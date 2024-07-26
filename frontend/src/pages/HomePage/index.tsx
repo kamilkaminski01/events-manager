@@ -7,6 +7,7 @@ import { ParticipantsContext } from 'providers/participants/context'
 import { EventsContext } from 'providers/events/context'
 import classNames from 'classnames'
 import { AuthContext } from 'providers/auth/context'
+import Meta from 'components/atoms/Meta'
 
 const HomePage = () => {
   const { isLogged } = useContext(AuthContext)
@@ -35,6 +36,9 @@ const HomePage = () => {
 
   return (
     <main className={classNames('home-page', { logged: isLogged })}>
+      <Meta>
+        <title>{'Events Manager'}</title>
+      </Meta>
       <div className="home-page__menu">
         <ContentSwitcherButton
           onClick={onParticipantsSwitch}

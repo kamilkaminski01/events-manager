@@ -6,8 +6,6 @@ services:
     env_file:
       - .envs/.flask
       - .envs/.postgres
-    ports:
-      - "4000:4000"
     depends_on:
       db:
         condition: service_healthy

@@ -24,6 +24,11 @@ const ParticipantPage = () => {
     <main className="participant-page">
       <Meta>
         <meta name="robots" content="noindex" />
+        {participant ? (
+          <title>{`${participant.firstName} ${participant.lastName} | Events Manager`}</title>
+        ) : (
+          <title>{'Participant not found'}</title>
+        )}
       </Meta>
       {participant ? (
         <>
