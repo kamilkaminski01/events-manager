@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import CreateEventPage from 'pages/CreateEventPage'
 import ParticipantsProvider from 'providers/participants'
 import ModalsProvider from 'providers/modals'
+import { HelmetProvider } from 'react-helmet-async'
 
 const createButtonName = /create/i
 const addParticipantsButtonName = /add participants/i
@@ -33,13 +34,15 @@ describe('CreateEventPage', () => {
   beforeEach(() => {
     render(
       <BrowserRouter>
-        <ParticipantsProvider>
-          <ModalsProvider>
-            <Routes>
-              <Route path="/" element={<CreateEventPage />} />
-            </Routes>
-          </ModalsProvider>
-        </ParticipantsProvider>
+        <HelmetProvider>
+          <ParticipantsProvider>
+            <ModalsProvider>
+              <Routes>
+                <Route path="/" element={<CreateEventPage />} />
+              </Routes>
+            </ModalsProvider>
+          </ParticipantsProvider>
+        </HelmetProvider>
       </BrowserRouter>
     )
   })
