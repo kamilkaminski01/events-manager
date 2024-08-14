@@ -4,9 +4,12 @@ import { ENDPOINTS, LOCAL_STORAGE } from './consts'
 
 export const refreshToken = async (): Promise<IServerResponse> => {
   try {
-    const response = await axiosAuth.post(ENDPOINTS.refreshToken, {
-      refresh: localStorage.getItem(LOCAL_STORAGE.refreshToken)
-    })
+    const refreshToken = localStorage.getItem(LOCAL_STORAGE.refreshToken)
+    const response = await axiosAuth.post(
+      ENDPOINTS.refreshToken,
+      {},
+      { headers: { Authorization: `Bearer ${refreshToken}` } }
+    )
 
     localStorage.setItem(LOCAL_STORAGE.accessToken, response.data.access)
 

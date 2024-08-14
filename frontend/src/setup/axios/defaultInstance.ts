@@ -12,7 +12,7 @@ axiosDefault.interceptors.request.use(
     const accessToken = localStorage.getItem(LOCAL_STORAGE.accessToken)
 
     if (accessToken && typeof accessToken !== 'undefined') {
-      config.headers!.Authorization = `Bearer ${accessToken}`
+      config.headers.Authorization = `Bearer ${accessToken}`
     }
 
     return config
@@ -27,7 +27,7 @@ const refreshAuthLogic = async (failedRequest: any) => {
 
   if (response.succeed) {
     const accessToken = localStorage.getItem(LOCAL_STORAGE.accessToken)
-    failedRequest.response.config.headers = `Bearer ${accessToken}`
+    failedRequest.response.config.headers.Authorization = `Bearer ${accessToken}`
 
     return Promise.resolve()
   } else {
