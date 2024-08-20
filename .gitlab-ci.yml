@@ -9,6 +9,8 @@ variables:
 test-with-linters:
   stage: test
   image: docker:27.0
+  tags:
+    - docker
   services:
     - docker:27-dind
   before_script:
@@ -21,6 +23,8 @@ test-with-linters:
 build:
   stage: build
   image: docker:27.0
+  tags:
+    - docker
   services:
     - docker:27-dind
   before_script:
@@ -37,6 +41,8 @@ deploy:
   stage: deploy
   before_script:
     - chmod 400 $SSH_KEY
+  tags:
+    - docker
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$SSH_HOST -p $SSH_PORT "
       cd $PROJECT/ &&

@@ -30,7 +30,7 @@ class Event(db.Model):  # type: ignore
     )
 
     def __repr__(self) -> str:
-        return f"{self.name}"
+        return f"<Event {self.name}>"
 
     @classmethod
     def default_sort(cls):
