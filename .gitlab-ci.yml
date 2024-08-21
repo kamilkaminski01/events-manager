@@ -4,11 +4,10 @@ stages:
   - deploy
 
 variables:
-  IMAGES_REPO: $REGISTRY_USER/$PROJECT
+  IMAGES_REPO: $REGISTRY_USER/$CI_PROJECT_NAME
 
 test-with-linters:
   stage: test
-  image: docker:27.0
   tags:
     - docker
   services:
@@ -22,7 +21,6 @@ test-with-linters:
 
 build:
   stage: build
-  image: docker:27.0
   tags:
     - docker
   services:
@@ -40,13 +38,10 @@ build:
 deploy:
   stage: deploy
   tags:
-    - docker
-  before_script:
-    - chmod 400 $SSH_KEY
+    - shell
   script:
-    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$SSH_HOST -p $SSH_PORT "
-      cd $PROJECT/ &&
-      echo -n $REGISTRY_PASSWORD | docker login -u $REGISTRY_USER --password-stdin &&
-      make down env=prod &&
-      docker images -q $IMAGES_REPO | xargs -r docker rmi &&
-      make run env=prod"
+    - cd /root/$CI_PROJECT_NAME/
+    - echo -n $REGISTRY_PASSWORD | docker login -u $REGISTRY_USER --password-stdin
+    - make down env=prod
+    - make clear env=prod
+    - make run env=prod

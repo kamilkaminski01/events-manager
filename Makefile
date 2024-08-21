@@ -10,6 +10,8 @@ endif
 
 .PHONY: build run down recreate admin initial-data clear-data isort black flake8 mypy test pytest vitest lint check frontcheck migrations migrate clear
 
+REGISTRY = kamil01/events-manager
+
 build:
 	docker compose -f $(COMPOSE_FILE) build
 
@@ -75,5 +77,5 @@ migrate:
 	docker compose -f $(COMPOSE_FILE) run --rm web flask db upgrade
 
 clear:
-	docker compose -f $(COMPOSE_FILE) down
-	docker images -aq | xargs -r docker rmi
+	docker compose -f $(COMPOSE_FILE) down -v
+	docker images -q $(REGISTRY) | xargs -r docker rmi
