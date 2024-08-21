@@ -77,5 +77,5 @@ migrate:
 	docker compose -f $(COMPOSE_FILE) run --rm web flask db upgrade
 
 clear:
-	docker compose -f $(COMPOSE_FILE) down -v
+	docker compose -f $(COMPOSE_FILE) down
 	docker images -q $(REGISTRY) | xargs -r docker rmi
