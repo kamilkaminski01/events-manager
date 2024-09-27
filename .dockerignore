@@ -7,3 +7,4 @@
 .readthedocs.yml
 venv
 frontend/node_modules
+logs/

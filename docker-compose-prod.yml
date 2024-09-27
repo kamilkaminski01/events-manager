@@ -3,6 +3,9 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./logs/gunicorn:/backend/logs/gunicorn
     env_file:
       - .envs/.flask
       - .envs/.postgres
@@ -27,6 +30,9 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./logs/nginx:/var/log/nginx
     ports:
       - "82:80"
     depends_on:
