@@ -10,8 +10,6 @@ endif
 
 .PHONY: build run down recreate admin initial-data clear-data isort black flake8 mypy test pytest vitest lint check frontcheck migrations migrate clear
 
-REGISTRY = kamil01/events-manager
-
 build:
 	docker compose -f $(COMPOSE_FILE) build
 
@@ -34,41 +32,41 @@ clear-data:
 	docker compose -f $(COMPOSE_FILE) run --rm web flask cmd clear_data
 
 isort:
-	docker compose -f $(COMPOSE_FILE) run --rm web isort .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web isort .
 
 black:
-	docker compose -f $(COMPOSE_FILE) run --rm web black . --exclude="migrations/"
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web black .
 
 flake8:
-	docker compose -f $(COMPOSE_FILE) run --rm web flake8 .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web flake8 .
 
 mypy:
-	docker compose -f $(COMPOSE_FILE) run --rm web mypy .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web mypy .
 
 test:
-	docker compose -f $(COMPOSE_FILE) run --rm web pytest
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web pytest
 	docker compose -f $(COMPOSE_FILE) run --rm frontend npm run test
 
 pytest:
-	docker compose -f $(COMPOSE_FILE) run --rm web pytest
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web pytest
 
 vitest:
 	docker compose -f $(COMPOSE_FILE) run --rm frontend npm run test
 
 lint:
-	docker compose -f $(COMPOSE_FILE) run --rm -T web isort .
-	docker compose -f $(COMPOSE_FILE) run --rm -T web black .
-	docker compose -f $(COMPOSE_FILE) run --rm -T web flake8 .
-	docker compose -f $(COMPOSE_FILE) run --rm -T web mypy .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps -T web isort .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps -T web black .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps -T web flake8 .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps -T web mypy .
 
 check:
-	docker compose -f $(COMPOSE_FILE) run --rm web isort --check-only .
-	docker compose -f $(COMPOSE_FILE) run --rm web black --check .
-	docker compose -f $(COMPOSE_FILE) run --rm web flake8 .
-	docker compose -f $(COMPOSE_FILE) run --rm web mypy .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web isort --check-only .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web black --check .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web flake8 .
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps web mypy .
 
 frontcheck:
-	docker compose -f $(COMPOSE_FILE) run --rm -T frontend npm run check
+	docker compose -f $(COMPOSE_FILE) run --rm --no-deps -T frontend npm run check
 
 migrations:
 	docker compose -f $(COMPOSE_FILE) run --rm web flask db migrate
@@ -78,4 +76,4 @@ migrate:
 
 clear:
 	docker compose -f $(COMPOSE_FILE) down
-	docker images -q $(REGISTRY) | xargs -r docker rmi
+	docker images -q kamil01/events-manager | xargs -r docker rmi

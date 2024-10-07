@@ -40,8 +40,7 @@ deploy:
   tags:
     - shell
   script:
-    - cd /root/$CI_PROJECT_NAME/
+    - cd /srv/$CI_PROJECT_NAME/
     - echo -n $REGISTRY_PASSWORD | docker login -u $REGISTRY_USER --password-stdin
-    - make down env=prod
     - make clear env=prod
     - make run env=prod

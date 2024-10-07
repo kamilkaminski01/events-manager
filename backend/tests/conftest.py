@@ -2,8 +2,9 @@ import pytest
 from flask_jwt_extended import create_access_token
 from sqlalchemy.exc import IntegrityError
 
-from app import create_app, db
+from app import create_app
 from app.config import TestConfig
+from app.extensions import db
 from app.models.participant import Meal
 
 

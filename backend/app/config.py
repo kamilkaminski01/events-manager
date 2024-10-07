@@ -11,5 +11,5 @@ class Config:
 
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite3"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     SENTRY_DSN = None
