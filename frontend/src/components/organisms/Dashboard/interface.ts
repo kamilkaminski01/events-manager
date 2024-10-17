@@ -5,4 +5,5 @@ export interface DashboardProps {
   contentType: string
   content: IParticipant[] | IEvent[]
   isError: boolean
+  initialLoad: boolean
 }

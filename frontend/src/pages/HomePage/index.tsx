@@ -11,8 +11,13 @@ import Meta from 'components/atoms/Meta'
 
 const HomePage = () => {
   const { isLogged } = useContext(AuthContext)
-  const { participantsData, isError: participantsError } = useContext(ParticipantsContext)
-  const { eventsData, isError: eventsError } = useContext(EventsContext)
+  const {
+    participantsData,
+    isError: participantsError,
+    isLoading: participantsLoading
+  } = useContext(ParticipantsContext)
+  const { eventsData, isError: eventsError, isLoading: eventsLoading } = useContext(EventsContext)
+  const [initialLoad, setInitialLoad] = useState(true)
   const [visibleContent, setVisibleContent] = useState(EHomePageContentType.Participants)
 
   useEffect(() => {
@@ -23,6 +28,12 @@ const HomePage = () => {
       setVisibleContent(EHomePageContentType.Participants)
     }
   }, [])
+
+  useEffect(() => {
+    if (!participantsLoading && !eventsLoading) {
+      setTimeout(() => setInitialLoad(false), 350)
+    }
+  }, [participantsLoading, eventsLoading])
 
   const onParticipantsSwitch = () => {
     setVisibleContent(EHomePageContentType.Participants)
@@ -56,9 +67,15 @@ const HomePage = () => {
           contentType="participants"
           content={participantsData}
           isError={participantsError}
+          initialLoad={initialLoad}
         />
       ) : (
-        <Dashboard contentType="events" content={eventsData} isError={eventsError} />
+        <Dashboard
+          contentType="events"
+          content={eventsData}
+          isError={eventsError}
+          initialLoad={initialLoad}
+        />
       )}
     </main>
   )

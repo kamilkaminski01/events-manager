@@ -12,8 +12,10 @@
   }
 
   & > * {
-    width: 100%;
-    max-width: 85rem;
+    &:not(.spinner) {
+      width: 100%;
+      max-width: 85rem;
+    }
   }
 
   @include for-large-phone {

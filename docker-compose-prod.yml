@@ -8,23 +8,6 @@ services:
       - ./logs/gunicorn:/backend/logs/gunicorn
     env_file:
       - .envs/.flask
-      - .envs/.postgres
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
-    restart: always
-    image: postgres:15.3-alpine
-    env_file:
-      - .envs/.postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    healthcheck:
-      test: sh -c "pg_isready -U postgres"
-      interval: 3s
-      timeout: 3s
-      retries: 5
 
   frontend:
     build:
@@ -38,6 +21,3 @@ services:
     depends_on:
       web:
         condition: service_started
-
-volumes:
-  postgres_data:

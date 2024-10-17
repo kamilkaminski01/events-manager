@@ -7,8 +7,9 @@ import { IEvent } from 'models/event'
 import { useContext } from 'react'
 import { AuthContext } from 'providers/auth/context'
 import classNames from 'classnames'
+import Spinner from 'components/atoms/Spinner'
 
-const Dashboard = ({ contentType, content, isError }: DashboardProps) => {
+const Dashboard = ({ contentType, content, isError, initialLoad }: DashboardProps) => {
   const { isLogged } = useContext(AuthContext)
 
   return (
@@ -17,6 +18,8 @@ const Dashboard = ({ contentType, content, isError }: DashboardProps) => {
         <div className="dashboard dashboard--no-data">
           <h3 className="dashboard__title">Error during loading {contentType}</h3>
         </div>
+      ) : initialLoad ? (
+        <Spinner />
       ) : (
         <>
           {content.length ? (
