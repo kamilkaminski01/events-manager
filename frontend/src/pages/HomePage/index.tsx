@@ -31,7 +31,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (!participantsLoading && !eventsLoading) {
-      setTimeout(() => setInitialLoad(false), 350)
+      setTimeout(() => setInitialLoad(false), 250)
     }
   }, [participantsLoading, eventsLoading])
 

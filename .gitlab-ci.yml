@@ -18,6 +18,7 @@ test-with-linters:
   script:
     - make check
     - make test
+    - make frontcheck
 
 build:
   stage: build
@@ -34,6 +35,8 @@ build:
     - docker push $IMAGES_REPO:frontend
   after_script:
     - docker logout
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 deploy:
   stage: deploy
@@ -44,3 +47,5 @@ deploy:
     - echo -n $REGISTRY_PASSWORD | docker login -u $REGISTRY_USER --password-stdin
     - make clear env=prod
     - make run env=prod
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
