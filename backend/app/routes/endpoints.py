@@ -33,8 +33,8 @@ def login() -> Response:
         user = db.session.query(User).filter_by(username=username).first()
         if not user or not user.check_password(password):
             return make_response(jsonify(Responses.INVALID_CREDENTIALS), 401)
-        access_token = create_access_token(identity=user.id)
-        refresh_token = create_refresh_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
+        refresh_token = create_refresh_token(identity=str(user.id))
     except ValidationError:
         return make_response(jsonify(Responses.INVALID_DATA), 400)
     return make_response(jsonify(access=access_token, refresh=refresh_token), 200)
