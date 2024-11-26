@@ -19,19 +19,18 @@ def initialize_db_with_dependent_data():
         db.session.rollback()
 
 
-@pytest.fixture()
+@pytest.fixture(autouse=True)
 def app():
     app = create_app(config=TestConfig)
+    app.app_context().push()
 
-    with app.app_context():
-        db.create_all()
-        initialize_db_with_dependent_data()
+    db.create_all()
+    initialize_db_with_dependent_data()
 
     yield app
 
-    with app.app_context():
-        db.session.remove()
-        db.drop_all()
+    db.session.remove()
+    db.drop_all()
 
 
 @pytest.fixture()
@@ -40,7 +39,6 @@ def client(app):
 
 
 @pytest.fixture()
-def auth(app):
-    with app.app_context():
-        access_token = create_access_token(identity="test")
-        return {"Authorization": f"Bearer {access_token}"}
+def auth():
+    access_token = create_access_token(identity="1")
+    return {"Authorization": f"Bearer {access_token}"}
